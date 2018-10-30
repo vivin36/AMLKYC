@@ -1,0 +1,17 @@
+{
+    "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb-base"],
+    "env": {
+      "browser": true
+    },
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "linebreak-style": ["error", "unix"],
+      "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+      "no-return-assign": "off"
+    }
+  }
+  

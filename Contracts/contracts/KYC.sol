@@ -25,14 +25,14 @@ contract KYC {
 	@param _age - age of the user
 	@param _gender - gender  of the user
     */
-	function createKYC(bytes32 _id, string _name, string _userAddress, int32 _age, bytes32 _gender) public {
+	function createKYC(bytes32 _id, string _name, string _userAddress, int32 _age, bytes32 _gender,uint256 _validationEndDate) public {
 		userList[_id].id = _id;
 		userList[_id].name = _name;
 		userList[_id].userAddress = _userAddress;
 		userList[_id].age = _age;
 		userList[_id].gender = _gender;
 		validationDetails[_id].validatedDate = now;
-		validationDetails[_id].validationEndDate = now * 365 * 86400;
+		validationDetails[_id].validationEndDate = _validationEndDate;
 
 	}
 	/**

@@ -43,11 +43,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "fix": "npm run format && npm run lint -- --fix",
-    "format": "prettier --write \"**/*.{js,json,scss}\"",
-    "lint": "eslint ."
-  /*   "precommit": "lint-staged" */
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

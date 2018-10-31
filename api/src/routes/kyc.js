@@ -4,9 +4,9 @@ const  { createKYC } = require('../business/kyc.service');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { id, name, userAddress, age, gender, validationEndDate } = req.body;
+  const { id, name, userAddress, dob, gender, validationEndDate } = req.body;
   try {
-    await createKYC(id, name, userAddress, age, gender, validationEndDate);
+    await createKYC(id, name, userAddress, dob, gender, validationEndDate);
     res.status(200).json(req.body);
   } catch (err) {
     res.status(500).json({ error: err.message });

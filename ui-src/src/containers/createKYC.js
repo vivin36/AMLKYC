@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import documentsActions from '../actions/kyc.actions';
+import KYCActions from '../actions/kyc.actions';
 import CreateKYCForm from '../components/forms/createKYCForm';
 
 Moment.globalFormat = 'DD MMM YYYY';
@@ -13,11 +13,11 @@ class CreateKYC extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getData();
   }
 
-  showResults(key) {
-    console.log(key);
+  showResults(KYCDetails) {
+    console.log(KYCDetails);
+    this.props.createKYC(KYCDetails);
   }
 
   render() {
@@ -35,13 +35,14 @@ class CreateKYC extends React.Component {
 }
 
 CreateKYC.propTypes = {
-  getData: PropTypes.func.isRequired,
+  createKYC: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  getData: () => {
-    documentsActions.getDocumentsList()(dispatch);
+  createKYC: (KYCDetails) => {
+    KYCActions.createKYC(KYCDetails)(dispatch);
   },
+  
 });
 
 const mapStateToProps = (state, ownProps) => {

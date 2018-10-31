@@ -1,23 +1,30 @@
 import KYCConstants from '../constants/kycConstant';
-import { getCall } from './fetch.actions';
+import { getCall,postCall } from './fetch.actions';
 
-const getDocumentsList = () => (dispatch) => {
+
+
+const createKYC = KYCDocuments => (dispatch) => {
   dispatch({
     type: KYCConstants.KYC_CREATE_FETCH,
     payload: {
       isFetching: true,
     },
   });
-
-  const documentProps = {
-    endpoint: '',
+  KYCDocuments.validationEndDate = new Date().getTime();
+  const KYCDetails = {
+    data: KYCDocuments,
+    endpoint: '/kyc',
     success: KYCConstants.KYC_CREATE_SUCCESS,
     error: KYCConstants.KYC_CREATE_FAILURE,
+    route: '/',
   };
 
-  getCall(documentProps)(dispatch);
+  console.log('KYCDetails',KYCDetails);
+
+  postCall(KYCDetails)(dispatch);
 };
 
+
 export default {
-  getDocumentsList,
+  createKYC,
 };

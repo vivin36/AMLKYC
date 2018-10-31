@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import  KYCReducer  from './KYC.reducer';
 //import storage from 'redux-persist/lib/storage';
 const rootReducer = combineReducers({
-    form: formReducer
+    form: formReducer,
+    KYCReducer,
 });
 
 // const appReducer = (state, action) => {

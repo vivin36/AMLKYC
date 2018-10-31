@@ -2,3 +2,6 @@ Contracts/build/contracts/*
 api/dist
 api/node_modules
 api/package-lock.json
+
+# dependencies
+ui-src/node_modules

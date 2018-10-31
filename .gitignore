@@ -1,2 +1,4 @@
-Contracts/build/contracts/KYC.json
-Contracts/build/contracts/Migrations.json
+Contracts/build/contracts/*
+api/dist
+api/node_modules
+api/package-lock.json

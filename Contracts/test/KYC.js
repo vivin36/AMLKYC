@@ -8,7 +8,7 @@ contract('KYC contract test', async (accounts) => {
     }); 
 
     it("Create a KYC document in Blockchain and verifying it", async () => {
-        await KYCContract.createKYC("0x12345","vivin","North Down Street",25,"M",1572432745,  {privateFor: ["oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8="]});
+        await KYCContract.createKYC("0x12345","vivin","North Down Street","03/06/1994","M",1572432745,  {privateFor: ["oNspPPgszVUFw0qmGFfWwh1uxVUXgvBxleXORHj07g8="]});
         let response = await instance.getDetailsByID("0x12345");
         assert.equal(response[0], "Name");
     })

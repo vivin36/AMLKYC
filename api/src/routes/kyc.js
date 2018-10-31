@@ -1,5 +1,8 @@
 import express from 'express';
-const  { createKYC } = require('../business/kyc.service');
+const  { 
+  createKYC,
+  getKYCDetails
+ } = require('../business/kyc.service');
 
 const router = express.Router();
 
@@ -18,7 +21,13 @@ router.put('/:id', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  const { id } = req.params.id;
+  try {
+    const { id } = req.params;    
+    let details = await getKYCDetails(id);
+    res.status(200).json(details);
+  } catch (err) {
+    res.status(500).json({ error: err.message});
+  }  
 });
 
 export default router;

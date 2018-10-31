@@ -1,6 +1,6 @@
 const config = {
   dev: {
-    baseUrl: '',
+    baseUrl: 'http://localhost:8080',
     blockURL: '',
     apiKey: '',
     timeout: 10000,

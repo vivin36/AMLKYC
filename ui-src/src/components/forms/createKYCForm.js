@@ -8,24 +8,13 @@ const CreateKYCForm = (props) => {
   return (
     <form className="form-group" onSubmit={handleSubmit}>
       <div>
-        <label>First Name</label>
+        <label>Name</label>
         <div>
           <Field
-            name="firstName"
+            name="name"
             component="input"
             type="text"
-            placeholder="First Name"
-          />
-        </div>
-      </div>
-      <div>
-        <label>Last Name</label>
-        <div>
-          <Field
-            name="lastName"
-            component="input"
-            type="text"
-            placeholder="Last Name"
+            placeholder="Name"
           />
         </div>
       </div>
@@ -33,22 +22,33 @@ const CreateKYCForm = (props) => {
         <label>DOB</label>
         <div>
           <Field
-            name="DOB"
+            name="dob"
+            component="input"
+            type="date"
+            placeholder="mm/dd/yyyy"
+          />
+        </div>
+      </div>
+      <div>
+        <label>National ID</label>
+        <div>
+          <Field
+            name="id"
             component="input"
             type="text"
-            placeholder="mm/dd/yyyy"
+            placeholder="ID"
           />
         </div>
       </div>
 
       <div>
-        <label>Sex</label>
+        <label>Gender</label>
         <div>
           <label>
-            <Field name="sex" component="input" type="radio" value="M" /> Male
+            <Field name="gender" component="input" type="radio" value="M" /> Male
           </label>
           <label>
-            <Field name="sex" component="input" type="radio" value="F" /> Female
+            <Field name="gender" component="input" type="radio" value="F" /> Female
           </label>
         </div>
       </div>
@@ -56,7 +56,7 @@ const CreateKYCForm = (props) => {
       <div>
         <label>Address</label>
         <div>
-          <Field name="address" component="textarea" />
+          <Field name="userAddress" component="textarea" />
         </div>
       </div>
       <div>

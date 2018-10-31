@@ -65,13 +65,13 @@ export const postCall = props => (dispatch) => {
   api
     .post(`${props.endpoint}`, props.data)
     .then((res) => {
-      if (res.statusText === 'OK') {
+      if (res.status === 200) {
         const response = res.data;
         if (response) {
-          if (response.data) {
+          if (response) {
             dispatch({
               type: props.success,
-              payload: response.data,
+              payload: response,
             });
 
             // Push routes here if any

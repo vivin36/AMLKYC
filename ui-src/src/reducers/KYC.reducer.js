@@ -12,9 +12,10 @@ export default (state = initialState, action) => {
         isFetching: true,
       };
     case KYCConstants.KYC_CREATE_SUCCESS:
+      alert('Success');
       return {
         ...state,
-        documentsList: action.payload,
+        KYCDetails: action.payload,
         isFetching: false,
       };
     case KYCConstants.KYC_CREATE_FAILURE:

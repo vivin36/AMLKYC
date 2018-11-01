@@ -27,7 +27,7 @@ contract ScreeningList {
      * @param _tanNumber Company TAN
      */
     function addWhiteListedCompany(bytes8 _id, string _name, bytes10 _tanNumber) onlyOwner(owner) external {
-        Company storage company;
+        Company memory company;
         company.id = _id;
         company.name = _name;
         company.tanNumber = _tanNumber;
@@ -42,7 +42,7 @@ contract ScreeningList {
      * @param _tanNumber Company TAN
      */
     function addBlackListedCompany(bytes8 _id, string _name, bytes10 _tanNumber) onlyOwner(owner) external {
-        Company storage company;
+        Company memory company;
         company.id = _id;
         company.name = _name;
         company.tanNumber = _tanNumber;
@@ -53,20 +53,17 @@ contract ScreeningList {
     /**
      * @dev Blacklists a company
      * @param _id Company ID
-     * @param _isBlackListed  True indicates company to be blacklisted
      */
-    function blacklistCompany(bytes8 _id, bool _isBlackListed) onlyOwner(owner) external {
-        if(_isBlackListed) {
-            Company storage company;
-            for(uint index = 0; index < whiteListedCompanies.length; index++) {
-                if(whiteListedCompanies[index].id == _id) {
-                    company = whiteListedCompanies[index];
-                    delete whiteListedCompanies[index];
-                    blackListedCompanies.push(company);
-                    break;
-                }
+    function blacklistCompany(bytes8 _id) onlyOwner(owner) external {        
+        Company memory company;
+        for(uint index = 0; index < whiteListedCompanies.length; index++) {
+            if(whiteListedCompanies[index].id == _id) {
+                company = whiteListedCompanies[index];
+                delete whiteListedCompanies[index];
+                blackListedCompanies.push(company);
+                break;
             }
-        }
+        }        
     }
 
     /**

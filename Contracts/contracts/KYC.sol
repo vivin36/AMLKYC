@@ -44,6 +44,23 @@ contract KYC {
 	}
 
 	/**
+	 @dev Updates user details, KYC validity dates
+	 @param _id - the username of user
+	 @param _name - name of the user
+	 @param _userAddress - Physical address of the user
+	 @param _dob - DOB of the user
+	 @param _gender - gender  of the user
+	 */
+	function updateKYC(bytes32 _id, string _name, string _userAddress, bytes32 _dob, bytes32 _gender,uint256 _validationEndDate) onlyOwner(owner) external {
+	    require(userList[_id].id != 0, "User doesn't exist!");
+	    userList[_id].name = _name;
+		userList[_id].userAddress = _userAddress;
+		userList[_id].dob = _dob;
+		userList[_id].gender = _gender;
+	    validationDetails[_id].validationEndDate = _validationEndDate;
+	}
+
+	/**
 	@dev Retrieves the user Details and KYC validated Infromation from blockchain
     @param _id - User ID
 	*/

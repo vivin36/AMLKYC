@@ -3,7 +3,7 @@ import kycMetaData from '../../../Contracts/build/contracts/KYC.json';
 import config from '../config/config';
 
 const web3 = Web3();
-const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541007339280'].address);
+const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541045698252'].address);
 
 let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) => {
     try {
@@ -18,10 +18,30 @@ let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) =>
             validationEndDate)
             .send({
                 from: accounts[0],
-                gas: 4700000,
-                privateFor: [key]
+                gas: 4700000                
             });
         return Promise.resolve();
+    } catch (e) {
+        return Promise.reject(e);
+    }
+};
+
+let updateKYC = async (id, name, userAddress, dob, gender, validationEndDate) => {
+    try {
+        const key = config.nodeFour.key;
+        const accounts = await web3.eth.getAccounts();
+        await kycInstance.methods.updateKYC(
+            web3.utils.fromAscii(id), 
+            name, 
+            userAddress, 
+            web3.utils.fromAscii(dob), 
+            web3.utils.fromAscii(gender), 
+            validationEndDate)
+            .send({
+                from: accounts[0],
+                gas: 4700000
+            });
+        return Promise.resolve();    
     } catch (e) {
         return Promise.reject(e);
     }
@@ -46,5 +66,6 @@ let getKYCDetails = async (id) => {
 
 export { 
     createKYC,
+    updateKYC,
     getKYCDetails
 };

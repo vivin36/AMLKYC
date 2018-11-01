@@ -1,7 +1,8 @@
 import express from 'express';
 const  { 
   createKYC,
-  getKYCDetails
+  updateKYC,
+  getKYCDetails,
  } = require('../business/kyc.service');
 
 const router = express.Router();
@@ -17,7 +18,14 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-
+  const { id } = req.params;
+  const { name, userAddress, dob, gender, validationEndDate } = req.body;
+  try {
+    await updateKYC(id, name, userAddress, dob, gender, validationEndDate);
+    res.status(200).json(req.body);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get('/:id', async (req, res) => {

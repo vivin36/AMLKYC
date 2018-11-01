@@ -16,8 +16,8 @@ contract KYC {
 		bytes32 dob;
 		bytes32 gender;
 	}
-	mapping(bytes32 => user) public userList;
-	mapping(bytes32 => KYCValidation) public validationDetails;
+	mapping(bytes32 => user) private userList;
+	mapping(bytes32 => KYCValidation) private validationDetails;
 
 	 modifier onlyOwner(address _account) {
         require(msg.sender == _account, "Unauthorized Access!");

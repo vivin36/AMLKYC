@@ -23,6 +23,17 @@ export default (state = initialState, action) => {
         ...state,
         err: action.payload,
       }; 
+      case KYCConstants.KYC_GETDETAILS_SUCCESS:
+      return {
+        ...state,
+        KYCDetails: action.payload,
+        isFetching: false,
+      };
+    case KYCConstants.KYC_GETDETAILS_FAILURE:
+      return {
+        ...state,
+        err: action.payload,
+      }; 
     default:
       return state;
   }

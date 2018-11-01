@@ -19,12 +19,13 @@ export const getCall = props => (dispatch) => {
   api
     .get(`${props.endpoint}/${props.data || ''}`)
     .then((res) => {
-      if (res.statusText === 'OK') {
-        const response = res.data;
-        if (response && response.data) {
+      console.log(res.status)
+      if (res.status === 200) {
+        const response = res;
+        if (response ) {
           dispatch({
             type: props.success,
-            payload: response.data,
+            payload: response,
           });
 
           // Push routes here if any

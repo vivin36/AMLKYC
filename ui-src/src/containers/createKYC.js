@@ -5,7 +5,7 @@ import Moment from 'react-moment';
 import KYCActions from '../actions/kyc.actions';
 import CreateKYCForm from '../components/forms/createKYCForm';
 
-Moment.globalFormat = 'DD MMM YYYY';
+
 class CreateKYC extends React.Component {
   constructor(props) {
     super(props);

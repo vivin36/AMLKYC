@@ -10,21 +10,41 @@ const createKYC = KYCDocuments => (dispatch) => {
       isFetching: true,
     },
   });
-  KYCDocuments.validationEndDate = new Date().getTime();
+  const  d = new Date();
+  const c = new Date(d.getFullYear() + 1, d.getMonth(),  d.getDate())
+  KYCDocuments.validationEndDate = c.getTime();
   const KYCDetails = {
     data: KYCDocuments,
     endpoint: '/kyc',
     success: KYCConstants.KYC_CREATE_SUCCESS,
     error: KYCConstants.KYC_CREATE_FAILURE,
-    route: '/',
+    route: '/fetchKYC',
   };
-
-  console.log('KYCDetails',KYCDetails);
 
   postCall(KYCDetails)(dispatch);
 };
 
+const getKYCDetails = (nationalID) => (dispatch) => {
+  dispatch({
+    type: KYCConstants.KYC_GETDETAILS_FETCH,
+    payload: {
+      isFetching: true,
+    },
+  });
+
+  const KYCDetails = {  
+    endpoint: '/kyc/'+nationalID,
+    success: KYCConstants.KYC_GETDETAILS_SUCCESS,
+    error: KYCConstants.KYC_GETDETAILS_FAILURE,
+  };
+
+  getCall(KYCDetails)(dispatch);
+};
+
+
+
 
 export default {
   createKYC,
+  getKYCDetails
 };

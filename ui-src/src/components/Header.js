@@ -26,7 +26,7 @@ class Header extends React.Component {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/getKYC">
+              <a className="nav-link" href="/fetchKYC">
                 Get KYC details By ID
               </a>
             </li>

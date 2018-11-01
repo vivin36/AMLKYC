@@ -19,12 +19,30 @@ const createKYC = KYCDocuments => (dispatch) => {
     route: '/',
   };
 
-  console.log('KYCDetails',KYCDetails);
-
   postCall(KYCDetails)(dispatch);
 };
+
+const getKYCDetails = (nationalID) => (dispatch) => {
+  dispatch({
+    type: KYCConstants.KYC_GETDETAILS_FETCH,
+    payload: {
+      isFetching: true,
+    },
+  });
+
+  const KYCDetails = {  
+    endpoint: '/kyc/'+nationalID,
+    success: KYCConstants.KYC_GETDETAILS_SUCCESS,
+    error: KYCConstants.KYC_GETDETAILS_FAILURE,
+  };
+
+  getCall(KYCDetails)(dispatch);
+};
+
+
 
 
 export default {
   createKYC,
+  getKYCDetails
 };

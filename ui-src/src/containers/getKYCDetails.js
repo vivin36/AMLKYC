@@ -46,24 +46,26 @@ class GetKYCDetails extends React.Component {
             </div>
         <div className="row">
         <div className="col-md-8 mt-5">
-        {this.props.KYCReducer?<table className="table table-bordered"> 
-        <thead className="thead-dark"><th>
+        {this.props.KYCReducer?
+       <div> <h1>KYC details</h1>
+        <table className="table table-bordered"> 
+        <thead ><th>
                  Name
                </th>
                <th>
-               userAddress
+               Address
                </th>
                <th>
                 Date of birth
                </th>
                <th>
-               gender
+               Gender
                </th>
                <th>
-               validatedDate
+               validated Date
                </th>
                <th>
-               validationEndDate
+               validation End Date
                </th>
                </thead>
               <tr>
@@ -74,7 +76,7 @@ class GetKYCDetails extends React.Component {
                  <td>{this.props.KYCReducer.validatedDate}</td> 
                  <td>{this.props.KYCReducer.validationEndDate}</td>                  
                </tr>
-             </table> :''}
+             </table></div> :''}
         </div>
          
        

@@ -3,7 +3,7 @@ import kycMetaData from '../../../Contracts/build/contracts/KYC.json';
 import config from '../config/config';
 
 const web3 = Web3();
-const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541007339280'].address);
+const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1540815033223'].address);
 
 let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) => {
     try {
@@ -18,8 +18,8 @@ let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) =>
             validationEndDate)
             .send({
                 from: accounts[0],
-                gas: 4700000,
-                privateFor: [key]
+                gas: 4700000
+                //privateFor: [key]
             });
         return Promise.resolve();
     } catch (e) {

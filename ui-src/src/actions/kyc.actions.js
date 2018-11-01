@@ -10,13 +10,15 @@ const createKYC = KYCDocuments => (dispatch) => {
       isFetching: true,
     },
   });
-  KYCDocuments.validationEndDate = new Date().getTime();
+  const  d = new Date();
+  const c = new Date(d.getFullYear() + 1, d.getMonth(),  d.getDate())
+  KYCDocuments.validationEndDate = c.getTime();
   const KYCDetails = {
     data: KYCDocuments,
     endpoint: '/kyc',
     success: KYCConstants.KYC_CREATE_SUCCESS,
     error: KYCConstants.KYC_CREATE_FAILURE,
-    route: '/',
+    route: '/fetchKYC',
   };
 
   postCall(KYCDetails)(dispatch);

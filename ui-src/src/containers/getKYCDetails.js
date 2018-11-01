@@ -31,9 +31,14 @@ class GetKYCDetails extends React.Component {
   }
 
   render() {
+    const getFormattedDate = (dateTime) => {
+      dateTime = new Date(dateTime).toString()
+      dateTime = dateTime.split(' ', 4).join(' ');
+      return dateTime;
+    }
     return (
         <div className="container-fluid">
-           <div className="col-md-4 mt-5">
+           <div className="col-md-4 mt-5 ml-5">
                 <div className="row">            
                 <form  onSubmit={this.handleSubmit}>
                         <label>
@@ -47,7 +52,7 @@ class GetKYCDetails extends React.Component {
         <div className="row">
         <div className="col-md-8 mt-5">
         {this.props.KYCReducer?
-       <div> <h1>KYC details</h1>
+       <div className="ml-5"> <h1>KYC details</h1>
         <table className="table table-bordered"> 
         <thead ><th>
                  Name
@@ -72,9 +77,9 @@ class GetKYCDetails extends React.Component {
                  <td>{this.props.KYCReducer.name}</td>
                  <td>{this.props.KYCReducer.userAddress}</td>
                  <td>{this.props.KYCReducer.dob}</td>
-                 <td>{this.props.KYCReducer.gender}</td>
-                 <td>{this.props.KYCReducer.validatedDate}</td> 
-                 <td>{this.props.KYCReducer.validationEndDate}</td>                  
+                 <td>{this.props.KYCReducer.gender =='M'?'Male':'Female'}</td>
+                 <td>{getFormattedDate(this.props.KYCReducer.validatedDate * 1000 )}</td> 
+                 <td>{getFormattedDate(this.props.KYCReducer.validationEndDate)}</td>                  
                </tr>
              </table></div> :''}
         </div>

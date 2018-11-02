@@ -1,7 +1,16 @@
 pragma solidity ^ 0.4 .23;
+import './ScreeningList.sol';
 
 contract KYC {
-
+    
+    ScreeningList screeningList;
+    address private owner;
+    
+    constructor(address _address) public {
+      screeningList = ScreeningList(_address);
+      owner = msg.sender;
+    }
+        
 	enum Status { Initiated,Pending,Approved,Rejected }
 	enum CustomerType { Banking,Retail,Corporate }
 
@@ -9,8 +18,6 @@ contract KYC {
 		uint256 validatedDate;
 		uint256 validationEndDate;
 	}
-	    
-    address private owner = msg.sender;
 
 	struct user {
 		bytes32 accountNumber;
@@ -19,10 +26,11 @@ contract KYC {
 		CustomerType customerType;
 		bool isParentCustomer;
 	}
+	
 	mapping(bytes32 => user) private userList;
 	mapping(bytes32 => KYCValidation) private validationDetails;
 
-	 modifier onlyOwner(address _account) {
+	modifier onlyOwner(address _account) {
         require(msg.sender == _account, "Unauthorized Access!");
         _;
     }
@@ -33,11 +41,11 @@ contract KYC {
     @param _name - name of the user
 	@param _customerType - Customer Type of user based on CustomerType enum
 	@param _KYCStaus - KYC status of KYC form
-	@param _isParentCustomer - checks 
+	@param _isParentCustomer - checks 	Parent or Subsidiary Customer
 	@param _validationEndDate - Validation End date for KYC details
     */
 	function createKYC(bytes32 _accountNumber, string _name, CustomerType _customerType,Status _KYCStaus,bool _isParentCustomer,uint256 _validationEndDate) onlyOwner(owner) public {
-		require(userList[_accountNumber].accountNumber == 0, "User already exists");
+	    require(screeningList.checkIsBlackListed(_accountNumber) == false, "Customer is blacklisted");
 		userList[_accountNumber].accountNumber = _accountNumber;
 		userList[_accountNumber].name = _name;
 		userList[_accountNumber].customerType = _customerType;
@@ -55,14 +63,16 @@ contract KYC {
 	 @param _name - name of the user
 	 @param  _customerType - Customer Type of user based on CustomerType enum
 	 @param _KYCStaus - KYC status of KYC form
+	 @param _isParentCustomer - checks 	Parent or Subsidiary Customer
 	 @param _validationEndDate - Validation End date for KYC details
 	 */
-	function updateKYC(bytes32 _accountNumber, string _name,CustomerType _customerType,Status _KYCStaus,uint256 _validationEndDate) onlyOwner(owner) external {
+	function updateKYC(bytes32 _accountNumber, string _name,CustomerType _customerType,Status _KYCStaus,bool _isParentCustomer,uint256 _validationEndDate) onlyOwner(owner) external {
 	    require(userList[_accountNumber].accountNumber != 0, "User doesn't exist!");
 	    userList[_accountNumber].accountNumber = _accountNumber;
 		userList[_accountNumber].name = _name;
 		userList[_accountNumber].customerType = _customerType;
 		userList[_accountNumber].KYCStatus = _KYCStaus;
+		userList[_accountNumber].isParentCustomer = _isParentCustomer;
 		validationDetails[_accountNumber].validationEndDate = _validationEndDate;
 	}
 	
@@ -82,6 +92,4 @@ contract KYC {
 		return validationDetails[_accountNumber].validationEndDate;
 	}
 	
-
-
 }

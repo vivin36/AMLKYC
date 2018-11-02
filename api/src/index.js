@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import kyc from './routes/kyc';
+import screeningList from './routes/screeningList';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/kyc', kyc);
+app.use('/screeningList', screeningList);
 app.get('/healthcheck', async (req, res) => res.sendStatus(200));
 
 const main = async () => {

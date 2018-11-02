@@ -41,7 +41,7 @@ contract KYC {
     @param _name - name of the user
 	@param _customerType - Customer Type of user based on CustomerType enum
 	@param _KYCStaus - KYC status of KYC form
-	@param _isParentCustomer - checks 
+	@param _isParentCustomer - checks 	Parent or Subsidiary Customer
 	@param _validationEndDate - Validation End date for KYC details
     */
 	function createKYC(bytes32 _accountNumber, string _name, CustomerType _customerType,Status _KYCStaus,bool _isParentCustomer,uint256 _validationEndDate) onlyOwner(owner) public {
@@ -63,14 +63,16 @@ contract KYC {
 	 @param _name - name of the user
 	 @param  _customerType - Customer Type of user based on CustomerType enum
 	 @param _KYCStaus - KYC status of KYC form
+	 @param _isParentCustomer - checks 	Parent or Subsidiary Customer
 	 @param _validationEndDate - Validation End date for KYC details
 	 */
-	function updateKYC(bytes32 _accountNumber, string _name,CustomerType _customerType,Status _KYCStaus,uint256 _validationEndDate) onlyOwner(owner) external {
+	function updateKYC(bytes32 _accountNumber, string _name,CustomerType _customerType,Status _KYCStaus,bool _isParentCustomer,uint256 _validationEndDate) onlyOwner(owner) external {
 	    require(userList[_accountNumber].accountNumber != 0, "User doesn't exist!");
 	    userList[_accountNumber].accountNumber = _accountNumber;
 		userList[_accountNumber].name = _name;
 		userList[_accountNumber].customerType = _customerType;
 		userList[_accountNumber].KYCStatus = _KYCStaus;
+		userList[_accountNumber].isParentCustomer = _isParentCustomer;
 		validationDetails[_accountNumber].validationEndDate = _validationEndDate;
 	}
 	

@@ -34,13 +34,13 @@ contract ScreeningList {
     /**
      * @dev Retrieves a black listed company based on id
      * @param _accountNumber Customer Account number
-     * @return bytes32
+     * @return string
      */ 
     
-    function getBlackListedCustomer(bytes8 _accountNumber) external view returns (bytes32) {
+    function getBlackListedCustomer(bytes8 _accountNumber) external view returns (string) {
         for(uint index = 0; index < blackListedCustomers.length; index++) {
             if(blackListedCustomers[index].accountNumber == _accountNumber) {
-                return (blackListedCustomers[index].accountNumber);
+                return (blackListedCustomers[index].name);
             }
         }
     }

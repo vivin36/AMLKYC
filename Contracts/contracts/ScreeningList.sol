@@ -37,10 +37,18 @@ contract ScreeningList {
      * @return string
      */ 
     
-    function getBlackListedCustomer(bytes8 _accountNumber) external view returns (string) {
+    function getBlackListedCustomer(bytes32 _accountNumber) external view returns (string) {
         for(uint index = 0; index < blackListedCustomers.length; index++) {
             if(blackListedCustomers[index].accountNumber == _accountNumber) {
                 return (blackListedCustomers[index].name);
+            }
+        }
+    }
+    
+    function checkIsBlackListed(bytes32 _accountNumber) external view returns (bool) {
+        for(uint index = 0; index < blackListedCustomers.length; index++) {
+            if(blackListedCustomers[index].accountNumber == _accountNumber) {
+                return true;
             }
         }
     }

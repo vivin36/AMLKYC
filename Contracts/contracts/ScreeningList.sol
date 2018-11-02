@@ -30,13 +30,25 @@ contract ScreeningList {
 
         blackListedCustomers.push(customer);
     }
+    
+    /**
+     * @dev Removes a blacklisted customer
+     * @param _accountNumber Customer Account Number
+     */
+    function removeBlackListedCustomer(bytes32 _accountNumber) onlyOwner(owner) external {
+        for(uint index = 0; index < blackListedCustomers.length; index++) {
+            if(blackListedCustomers[index].accountNumber == _accountNumber) {
+                delete blackListedCustomers[index];
+                break;
+            }
+        }
+    }
 
     /**
      * @dev Retrieves a black listed company based on id
-     * @param _accountNumber Customer Account number
+     * @param _accountNumber Customer Account Number
      * @return string
      */ 
-    
     function getBlackListedCustomer(bytes32 _accountNumber) external view returns (string) {
         for(uint index = 0; index < blackListedCustomers.length; index++) {
             if(blackListedCustomers[index].accountNumber == _accountNumber) {
@@ -45,6 +57,11 @@ contract ScreeningList {
         }
     }
     
+    /**
+     * @dev Checks whether a company is black listed or not
+     * @param _accountNumber Customer Account Number
+     * @return bool
+     */
     function checkIsBlackListed(bytes32 _accountNumber) external view returns (bool) {
         for(uint index = 0; index < blackListedCustomers.length; index++) {
             if(blackListedCustomers[index].accountNumber == _accountNumber) {

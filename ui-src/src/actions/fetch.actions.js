@@ -90,13 +90,21 @@ export const postCall = props => (dispatch) => {
         }
       }
     })
-    .catch(err => dispatch({
-      type: appConstants.WEB_REQUEST_ERROR,
-      payload:
-          (err.response && err.response.data && err.response.data.message)
-          || err.message
-          || err,
-    }));
+    .catch((err) => {
+      dispatch({
+        type: props.error,
+        payload: (err.response && err.response.data && err.response.data.message)
+        || err.message
+        || err,
+      });
+      return dispatch({
+        type: appConstants.WEB_REQUEST_ERROR,
+        payload:
+            (err.response && err.response.data && err.response.data.message)
+            || err.message
+            || err,
+      });
+    });
 };
 
 export const putCall = props => (dispatch) => {

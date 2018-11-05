@@ -8,7 +8,7 @@ import CreateKYCForm from '../components/forms/createKYCForm';
 class GetKYCDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { nationalID: '' };
+    this.state = { accountNumber: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -23,11 +23,11 @@ class GetKYCDetails extends React.Component {
 
   handleSubmit(event) {
       event.preventDefault();
-      this.props.fetchKYCDetails(this.state.nationalID);
+      this.props.fetchKYCDetails(this.state.accountNumber);
       
   }
   handleChange(event) {
-    this.setState({nationalID: event.target.value});
+    this.setState({accountNumber: event.target.value});
   }
 
   render() {
@@ -42,7 +42,7 @@ class GetKYCDetails extends React.Component {
                 <div className="row">            
                 <form  onSubmit={this.handleSubmit}>
                         <label>
-                                National ID:
+                                Account Number:
                                 <input type="text" className="ml-5" name="name" onChange={this.handleChange} />
                             </label>
                             <input type="submit" className="ml-5 btn-primary" value="Submit" />
@@ -54,30 +54,26 @@ class GetKYCDetails extends React.Component {
         {this.props.KYCReducer?
        <div className="ml-5"> <h1>KYC details</h1>
         <table className="table table-bordered"> 
-        <thead ><th>
+        <thead><th>
                  Name
+               </th>               
+               <th>
+                Customer Type - I
                </th>
                <th>
-               Address
+                Customer Type - II
+               </th>               
+               <th>
+               Validated Date
                </th>
                <th>
-                Date of birth
-               </th>
-               <th>
-               Gender
-               </th>
-               <th>
-               validated Date
-               </th>
-               <th>
-               validation End Date
+               Validation End Date
                </th>
                </thead>
               <tr>
-                 <td>{this.props.KYCReducer.name}</td>
-                 <td>{this.props.KYCReducer.userAddress}</td>
-                 <td>{this.props.KYCReducer.dob}</td>
-                 <td>{this.props.KYCReducer.gender =='M'?'Male':'Female'}</td>
+                 <td>{this.props.KYCReducer.name}</td>                 
+                 <td>{this.props.KYCReducer.customerType == 0 ? 'Banking' : this.props.KYCReducer.customerType == 1 ? 'Retail' : 'Corporate'}</td>
+                 <td>{this.props.KYCReducer.isParent == true ? 'Parent' : 'Subsidary'}</td>                 
                  <td>{getFormattedDate(this.props.KYCReducer.validatedDate * 1000 )}</td> 
                  <td>{getFormattedDate(this.props.KYCReducer.validationEndDate)}</td>                  
                </tr>

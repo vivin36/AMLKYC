@@ -13,6 +13,11 @@ const createKYC = KYCDocuments => (dispatch) => {
   const  d = new Date();
   const c = new Date(d.getFullYear() + 1, d.getMonth(),  d.getDate())
   KYCDocuments.validationEndDate = c.getTime();
+  KYCDocuments.kycStatus = 0;
+  if (KYCDocuments.isParent === "true")
+    KYCDocuments.isParent = true;
+  else
+  KYCDocuments.isParent = false;
   const KYCDetails = {
     data: KYCDocuments,
     endpoint: '/kyc',
@@ -24,7 +29,7 @@ const createKYC = KYCDocuments => (dispatch) => {
   postCall(KYCDetails)(dispatch);
 };
 
-const getKYCDetails = (nationalID) => (dispatch) => {
+const getKYCDetails = (accountNumber) => (dispatch) => {
   dispatch({
     type: KYCConstants.KYC_GETDETAILS_FETCH,
     payload: {
@@ -33,7 +38,7 @@ const getKYCDetails = (nationalID) => (dispatch) => {
   });
 
   const KYCDetails = {  
-    endpoint: '/kyc/'+nationalID,
+    endpoint: '/kyc/'+accountNumber,
     success: KYCConstants.KYC_GETDETAILS_SUCCESS,
     error: KYCConstants.KYC_GETDETAILS_FAILURE,
   };

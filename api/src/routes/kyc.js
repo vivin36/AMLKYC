@@ -8,30 +8,30 @@ const  {
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { id, name, userAddress, dob, gender, validationEndDate } = req.body;
+  const { accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate } = req.body;
   try {
-    await createKYC(id, name, userAddress, dob, gender, validationEndDate);
+    await createKYC(accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate);
     res.status(200).json(req.body);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, userAddress, dob, gender, validationEndDate } = req.body;
+router.put('/:accountNumber', async (req, res) => {
+  const { accountNumber } = req.params;
+  const { name, customerType, kycStatus, isParentCustomer, validationEndDate } = req.body;
   try {
-    await updateKYC(id, name, userAddress, dob, gender, validationEndDate);
+    await updateKYC(accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate);
     res.status(200).json(req.body);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:accountNumber', async (req, res) => {
   try {
-    const { id } = req.params;    
-    let details = await getKYCDetails(id);
+    const { accountNumber } = req.params;    
+    let details = await getKYCDetails(accountNumber);
     res.status(200).json(details);
   } catch (err) {
     res.status(500).json({ error: err.message});

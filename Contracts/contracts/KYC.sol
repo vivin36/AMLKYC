@@ -80,8 +80,8 @@ contract KYC {
 	@dev Retrieves the user Details and KYC validated Infromation from blockchain
     @param _accountNumber - User unique accountNumber
 	*/
-	function getDetailsByID(bytes32 _accountNumber) view public returns(string, CustomerType, Status, uint256, uint256) {
-		return (userList[_accountNumber].name, userList[_accountNumber].customerType, userList[_accountNumber].KYCStatus, validationDetails[_accountNumber].validatedDate, validationDetails[_accountNumber].validationEndDate);
+	function getDetailsByID(bytes32 _accountNumber) view public returns(string, CustomerType, Status, bool, uint256, uint256) {
+		return (userList[_accountNumber].name, userList[_accountNumber].customerType, userList[_accountNumber].KYCStatus, userList[_accountNumber].isParentCustomer, validationDetails[_accountNumber].validatedDate, validationDetails[_accountNumber].validationEndDate);
 	}
 	
 	/**

@@ -3,18 +3,18 @@ import kycMetaData from '../../../Contracts/build/contracts/KYC.json';
 import config from '../config/config';
 
 const web3 = Web3();
-const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541172738934'].address);
+const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541421909483'].address);
 
-let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) => {
+let createKYC = async (accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate) => {
     try {
         const key = config.nodeFour.key;
         const accounts = await web3.eth.getAccounts();
         await kycInstance.methods.createKYC(
-            web3.utils.fromAscii(id), 
-            name, 
-            userAddress, 
-            web3.utils.fromAscii(dob), 
-            web3.utils.fromAscii(gender), 
+            web3.utils.fromAscii(accountNumber), 
+            name,
+            customerType,
+            kycStatus,
+            isParentCustomer, 
             validationEndDate)
             .send({
                 from: accounts[0],
@@ -26,16 +26,16 @@ let createKYC = async (id, name, userAddress, dob, gender, validationEndDate) =>
     }
 };
 
-let updateKYC = async (id, name, userAddress, dob, gender, validationEndDate) => {
+let updateKYC = async (accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate) => {
     try {
         const key = config.nodeFour.key;
         const accounts = await web3.eth.getAccounts();
         await kycInstance.methods.updateKYC(
-            web3.utils.fromAscii(id), 
+            web3.utils.fromAscii(accountNumber), 
             name, 
-            userAddress, 
-            web3.utils.fromAscii(dob), 
-            web3.utils.fromAscii(gender), 
+            customerType, 
+            kycStatus, 
+            isParentCustomer, 
             validationEndDate)
             .send({
                 from: accounts[0],
@@ -47,15 +47,15 @@ let updateKYC = async (id, name, userAddress, dob, gender, validationEndDate) =>
     }
 };
 
-let getKYCDetails = async (id) => {
+let getKYCDetails = async (accountNumber) => {
     try {        
         let details = {};
         let count = 0;
-        const response = await kycInstance.methods.getDetailsByID(web3.utils.asciiToHex(id)).call();        
+        const response = await kycInstance.methods.getDetailsByID(web3.utils.asciiToHex(accountNumber)).call();        
         details.name = response[count++];
-        details.userAddress = response[count++];
-        details.dob = web3.utils.hexToAscii(response[count++]).replace(/\0/g, '');
-        details.gender = web3.utils.hexToAscii(response[count++]).replace(/\0/g, '');
+        details.customerType = parseInt(response[count++]);
+        details.kycStatus = parseInt(response[count++]);
+        details.isParent = response[count++];        
         details.validatedDate = parseInt(response[count++]);
         details.validationEndDate = parseInt(response[count++]);
         return Promise.resolve(details);

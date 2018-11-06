@@ -14,10 +14,10 @@ const createKYC = KYCDocuments => (dispatch) => {
   const c = new Date(d.getFullYear() + 1, d.getMonth(),  d.getDate())
   KYCDocuments.validationEndDate = c.getTime();
   KYCDocuments.kycStatus = 0;
-  if (KYCDocuments.isParent === "true")
-    KYCDocuments.isParent = true;
+  if (KYCDocuments.isParentCustomer === "true")
+    KYCDocuments.isParentCustomer = true;
   else
-  KYCDocuments.isParent = false;
+    KYCDocuments.isParentCustomer = false;
   const KYCDetails = {
     data: KYCDocuments,
     endpoint: '/kyc',

@@ -3,7 +3,7 @@ import screeningListMetaData from '../../../Contracts/build/contracts/ScreeningL
 import config from '../config/config';
 
 const web3 = Web3();
-const screeningListInstance = new web3.eth.Contract(screeningListMetaData.abi, screeningListMetaData.networks['1541421909483'].address);
+const screeningListInstance = new web3.eth.Contract(screeningListMetaData.abi, screeningListMetaData.networks['1541488714690'].address);
 
 let blackListCustomer = async (accountNumber, name) => {
     try {        

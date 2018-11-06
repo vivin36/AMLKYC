@@ -47,10 +47,10 @@ const CreateKYCForm = (props) => {
         <label>Customer Type - II</label>
         <div>
           <label>
-            <Field name="isParent" component="input" type="radio" value="true"/> Parent
+            <Field name="isParentCustomer" component="input" type="radio" value="true"/> Parent
           </label>
           <label>
-            <Field name="isParent" component="input" type="radio" value="false"/> Subsidiary
+            <Field name="isParentCustomer" component="input" type="radio" value="false"/> Subsidiary
           </label>
         </div>
       </div> 

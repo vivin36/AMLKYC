@@ -3,12 +3,13 @@ import kycMetaData from '../../../Contracts/build/contracts/KYC.json';
 import config from '../config/config';
 
 const web3 = Web3();
-const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541421909483'].address);
+const kycInstance = new web3.eth.Contract(kycMetaData.abi, kycMetaData.networks['1541488714690'].address);
 
 let createKYC = async (accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate) => {
     try {
         const key = config.nodeFour.key;
         const accounts = await web3.eth.getAccounts();
+        console.log(accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate);
         await kycInstance.methods.createKYC(
             web3.utils.fromAscii(accountNumber), 
             name,

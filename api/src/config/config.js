@@ -1,7 +1,8 @@
 export default {
     "development":{
         "host": "localhost",
-        "port": "8545",       
+        "port": "8545",
+        "network_id": "777"   
     },
     "nodeOne":{
         "host": "localhost",

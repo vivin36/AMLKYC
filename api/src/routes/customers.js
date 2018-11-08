@@ -9,20 +9,20 @@ const  {
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate } = req.body;
+  const { account, name, customerType, kycStatus, isParentCustomer } = req.body;
   try {
-    await createCustomerDetails(accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate);
-    res.status(200).json(req.body);
+    let customerDetails = await createCustomerDetails(account, name, customerType, kycStatus, isParentCustomer);
+    res.status(200).json(customerDetails);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.put('/:accountNumber', async (req, res) => {
-  const { accountNumber } = req.params;
-  const { name, customerType, kycStatus, isParentCustomer, validationEndDate } = req.body;
+router.put('/:address', async (req, res) => {
+  const { address } = req.params;
+  const { account, name, customerType, kycStatus, isParentCustomer } = req.body;
   try {
-    await updateCustomerDetails(accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate);
+    await updateCustomerDetails(address, account, name, customerType, kycStatus, isParentCustomer);
     res.status(200).json(req.body);
   } catch (err) {
     res.status(500).json({ error: err.message });

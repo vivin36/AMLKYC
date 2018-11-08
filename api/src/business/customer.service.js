@@ -1,58 +1,54 @@
 import Web3 from '../web3';
-import customerRepoMetaData from '../../../Contracts/build/contracts/CustomerRepo.json';
 import customerMetaData from '../../../Contracts/build/contracts/Customer.json';
 import config from '../config/config';
 
 const web3 = Web3();
-const customerRepoInstance = new web3.eth.Contract(customerRepoMetaData.abi, customerRepoMetaData.networks[config.development.network_id].address);
+let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerMetaData.networks[config.development.network_id].address);
 
-let createCustomerDetails = async (accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate) => {
+let createCustomerDetails = async (account, name, customerType, kycStatus, isParentCustomer) => {
     try {
         const key = config.nodeFour.key;
         const accounts = await web3.eth.getAccounts();
-        await customerRepoInstance.methods.createCustomer(
-            web3.utils.fromAscii(accountNumber)
-        )
-        .send({
-            from: accounts[0],
-            gas: 4700000
-        });
         
-        let customerContractAddress = await customerRepoInstance.methods.getCustomerAddress(web3.utils.fromAscii(accountNumber)).call();
+        let response = {};
 
-        console.log("CustomerContractAddress:: ", customerContractAddress);
-        let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerContractAddress);
+        let custAccountAddress = await web3.eth.personal.newAccount(account);      
 
         await customerInstance.methods.createCustomerDetails(
-            name,
+            custAccountAddress,
+            web3.utils.fromAscii(account),
+            web3.utils.fromAscii(name),
             customerType,
             kycStatus,
-            isParentCustomer, 
-            validationEndDate)
+            isParentCustomer)
             .send({
                 from: accounts[0],
                 gas: 4700000                
             });
-        return Promise.resolve();
+            response.custAccountAddress = custAccountAddress;
+            response.account = account;
+            response.name = name;
+            response.customerType = customerType;
+            response.kycStatus = kycStatus;
+            response.isParentCustomer = isParentCustomer;
+        return Promise.resolve(response);
     } catch (err) {
         return Promise.reject(err);
     }
 };
 
-let updateCustomerDetails = async (accountNumber, name, customerType, kycStatus, isParentCustomer, validationEndDate) => {
+let updateCustomerDetails = async (address, account, name, customerType, kycStatus, isParentCustomer) => {
     try {
         const key = config.nodeFour.key;
         const accounts = await web3.eth.getAccounts();
-        let customerContractAddress = await customerRepoInstance.methods.getCustomerAddress(web3.utils.fromAscii(accountNumber)).call();
         
-        let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerContractAddress);
-
         await customerInstance.methods.updateCustomerDetails(
-            name, 
+            address,
+            web3.utils.fromAscii(account),
+            web3.utils.fromAscii(name), 
             customerType, 
             kycStatus, 
-            isParentCustomer, 
-            validationEndDate)
+            isParentCustomer)
             .send({
                 from: accounts[0],
                 gas: 4700000
@@ -67,21 +63,25 @@ let getAllCustomerDetails = async () => {
     try {  
         let customerDetailsList = [];
         let customerDetails = {};
-        let count = 0;
-        const customerRepoResponse = await customerRepoInstance.methods.getAllAddresses().call();
-        const customerContractAddresses = customerRepoResponse.filter(elem => elem != '0x0000000000000000000000000000000000000000');
-        for (var customerContractAddress of customerContractAddresses) {
-            let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerContractAddress);
-            let customerResponse = await customerInstance.methods.getCustomerDetails().call();
-            customerDetails.name = customerResponse[count++];
-            customerDetails.customerType = parseInt(customerResponse[count++]);
-            customerDetails.kycStatus = parseInt(customerResponse[count++]);
-            customerDetails.isParent = customerResponse[count++];        
-            customerDetails.validatedDate = parseInt(customerResponse[count++]);
-            customerDetails.validationEndDate = parseInt(customerResponse[count++]);
+        
+        const customerResponse = await customerInstance.methods.getAllCustomerDetails().call();
+
+        const addressesList = customerResponse[0].filter(elem => elem != '0x0000000000000000000000000000000000000000');
+        const accountsList = customerResponse[1].filter(elem => elem != '0x0000000000000000000000000000000000000000');
+        const namesList = customerResponse[2].filter(elem => elem != '0x0000000000000000000000000000000000000000');
+        const custTypesList= customerResponse[3].filter(elem => elem != '0x0000000000000000000000000000000000000000');
+        const statusesList = customerResponse[4].filter(elem => elem != '0x0000000000000000000000000000000000000000');
+        const isParentsList = customerResponse[5];
+        
+        for (var count = 0; count < addressesList.length; count++) {
+            customerDetails.address =  addressesList[count];   
+            customerDetails.account = web3.utils.toAscii(accountsList[count]).replace(/\0/g, '');
+            customerDetails.name = web3.utils.toAscii(namesList[count]).replace(/\0/g, '');
+            customerDetails.custType = custTypesList[count];
+            customerDetails.status = statusesList[count];        
+            customerDetails.isParent = isParentsList[count];
             customerDetailsList.push(customerDetails);
-            customerDetails = {};
-            count = 0;
+            customerDetails = {};            
         }
         
         return Promise.resolve(customerDetailsList);
@@ -90,21 +90,18 @@ let getAllCustomerDetails = async () => {
     }
 };
 
-let getCustomerDetails = async (accountNumber) => {
+let getCustomerDetails = async (address) => {
     try {
         let customerDetails = {};
         let count = 0;
 
-        let customerContractAddress = await customerRepoInstance.methods.getCustomerAddress(web3.utils.fromAscii(accountNumber)).call();        
-        let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerContractAddress);
-        let customerResponse = await customerInstance.methods.getCustomerDetails().call();
-        customerDetails.name = customerResponse[count++];
+        
+        let customerResponse = await customerInstance.methods.getCustomerDetails(address).call();
+        customerDetails.account = web3.utils.toAscii(customerResponse[count++]).replace(/\0/g, '');
+        customerDetails.name = web3.utils.toAscii(customerResponse[count++]).replace(/\0/g, '');
         customerDetails.customerType = parseInt(customerResponse[count++]);
         customerDetails.kycStatus = parseInt(customerResponse[count++]);
-        customerDetails.isParentCustomer = customerResponse[count++];        
-        customerDetails.validatedDate = parseInt(customerResponse[count++]);
-        customerDetails.validationEndDate = parseInt(customerResponse[count++]);        
-
+        customerDetails.isParentCustomer = customerResponse[count++];  
         return Promise.resolve(customerDetails);
     } catch(err) {
         return Promise.reject(err);

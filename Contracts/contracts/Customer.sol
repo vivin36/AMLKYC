@@ -23,8 +23,6 @@ contract Customer {
 		bool isParentCustomer;
 	}
 	
-	CustomerDetails private customerDetails;
-	
 	address[] private addressesList;
 	mapping(address => CustomerDetails) private customerDetailsMap;
 	
@@ -39,16 +37,17 @@ contract Customer {
     @param _account - Customer Account Number
     @param _name - Name of the user
 	@param _customerType - Customer Type of user based on CustomerType enum
-	@param _kycStaus - KYC status of KYC form
+	@param _kycStatus - KYC status of KYC form
 	@param _isParentCustomer - checks Parent or Subsidiary Customer
     */
-	function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType,Status _kycStaus,bool _isParentCustomer) external {
+	function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType,Status _kycStatus,bool _isParentCustomer) external {
 	    //require(screeningList.checkIsBlackListed(_accountNumber) == false, "Customer is blacklisted");
+	    CustomerDetails memory customerDetails;
 		customerDetails.accountAddress  = _accountAddress;
 		customerDetails.account = _account;
 		customerDetails.name = _name;
 		customerDetails.customerType = _customerType;
-		customerDetails.kycStatus = _kycStaus;
+		customerDetails.kycStatus = _kycStatus;
 		customerDetails.isParentCustomer = _isParentCustomer;
 		customerDetailsMap[_accountAddress] = customerDetails;
 		addressesList.push(_accountAddress);
@@ -64,6 +63,7 @@ contract Customer {
 	 */
 	function updateCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, Status _kycStatus, bool _isParentCustomer) onlyOwner(owner) external {
 	   // require(customerList[_accountNumber].accountNumber != 0, "User doesn't exist!");
+	    CustomerDetails memory customerDetails;
 		customerDetails.accountAddress = _accountAddress;
 		customerDetails.account = _account;
 		customerDetails.name = _name;
@@ -104,6 +104,21 @@ contract Customer {
 	        status[count] = customerDetailsMap[addressesList[count]].kycStatus;
 	        isParent[count] = customerDetailsMap[addressesList[count]].isParentCustomer;
 	        return (custAddress, account, name, custType, status, isParent);
+	    }
+	}
+	
+	function createCustomerDetailsBatch(address[] _accountAddresses, bytes12[] _accounts, bytes32[] _names, CustomerType[] _custTypes, bool[] _isParent) external {
+	    for(uint index = 0; index < _accountAddresses.length; index++) {
+	        CustomerDetails memory custDetails = CustomerDetails(
+	            _accountAddresses[index], 
+	            _accounts[index],
+	            _names[index],
+	            Status.Initiated,
+	            _custTypes[index],
+	            _isParent[index]);
+					        
+    		customerDetailsMap[_accountAddresses[index]] = custDetails;
+    		addressesList.push(_accountAddresses[index]);
 	    }
 	}	
 }

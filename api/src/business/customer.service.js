@@ -1,6 +1,7 @@
 import Web3 from '../web3';
 import customerMetaData from '../../../Contracts/build/contracts/Customer.json';
 import config from '../config/config';
+import csvdata from 'csvdata';
 
 const web3 = Web3();
 let customerInstance = new web3.eth.Contract(customerMetaData.abi, customerMetaData.networks[config.development.network_id].address);
@@ -12,14 +13,15 @@ let createCustomerDetails = async (account, name, customerType, kycStatus, isPar
         
         let response = {};
 
-        let custAccountAddress = await web3.eth.personal.newAccount(account);      
+        let custAccountAddress = await web3.eth.personal.newAccount(account);             
 
         await customerInstance.methods.createCustomerDetails(
             custAccountAddress,
             web3.utils.fromAscii(account),
             web3.utils.fromAscii(name),
             customerType,
-            kycStatus,
+            //kycStatus,
+            0,
             isParentCustomer)
             .send({
                 from: accounts[0],
@@ -108,9 +110,41 @@ let getCustomerDetails = async (address) => {
     }
 };
 
+let validateAndParseFile = async (filePath) => {
+    let accounts = [], names = [], custTypes = [], isParent = [], accountAddresses = [];
+    const ethAccounts = await web3.eth.getAccounts();
+
+    let parsedData = await csvdata.load(filePath);
+
+    for(var count  = 0; count < parsedData.length; count++) {
+        accounts.push(web3.utils.fromAscii(parsedData[count].ACCOUNT));
+        names.push(web3.utils.fromAscii(parsedData[count].NAME));
+        custTypes.push(parsedData[count].CUSTOMER_TYPE);
+        isParent.push(parsedData[count].PARENT_OR_SUBSIDIARY);
+    }
+
+    accountAddresses.push('0x1d82269cea0a74829a7f727016dd608f12c34fac');
+    accountAddresses.push('0x8cb7af8f38616b84a8ecc0b0a327d04e02b11bea');
+    accountAddresses.push('0xf5c7cdc2348ababb3ead65eef69ceca3f0f933e8');
+
+    console.log(accountAddresses, accounts, names, custTypes, isParent);
+
+    await customerInstance.methods.createCustomerDetailsBatch(
+        accountAddresses,
+        accounts,
+        names,
+        custTypes,
+        isParent)
+        .send({
+            from: ethAccounts[0],
+            gas: 4700000
+    });    
+};
+
 export { 
     createCustomerDetails,
     updateCustomerDetails,
     getAllCustomerDetails,
-    getCustomerDetails
+    getCustomerDetails,
+    validateAndParseFile
 };

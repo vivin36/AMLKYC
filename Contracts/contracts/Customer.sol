@@ -26,11 +26,11 @@ contract Customer {
     
     /**
     @dev Creates details of customers
-    @param _accountAddress - Customer Account Address
-    @param _account - Customer Account Number
+    @param _accountAddress - Etheruem account address of customer
+    @param _account - Account of customer
     @param _name - Name of the customer
-	@param _customerType - Customer Type of user based on CustomerType enum
-	@param _isParentCustomer - checks Parent or Subsidiary Customer
+	@param _customerType - Type of customer
+	@param _isParentCustomer - Parent or subsidiary customer
     */
     function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
         customerDetailsMap[_accountAddress].account = _account;
@@ -43,10 +43,10 @@ contract Customer {
     /**
 	 @dev Updates customer details
 	 @param _accountAddress - Ethreum account address of customer
-	 @param _account - Name of account
-	 @param _name - Name of the user
-	 @param  _customerType - Customer Type of user based on CustomerType enum
-	 @param _isParentCustomer - Checks parent or subsidiary Customer
+	 @param _account - Account of customer
+	 @param _name - Name of customer
+	 @param  _customerType - Type of customer
+	 @param _isParentCustomer - Parent or subsidiary customer
 	 */
     function updateCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
 	    customerDetailsMap[_accountAddress].account = _account;
@@ -57,7 +57,7 @@ contract Customer {
 	
     /**
 	@dev Retrieves the customer details of a particular customer
-	@param _accountAddress - Account address of customer
+	@param _accountAddress - Ethereum account address of customer
 	@return bytes12 - Account of customer
 	@return bytes32 - Name of customer
 	@return CustomerType - Type of Customer

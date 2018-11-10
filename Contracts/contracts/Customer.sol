@@ -1,124 +1,108 @@
 pragma solidity ^ 0.4.23;
-import './ScreeningList.sol';
-
 contract Customer {
     
-    ScreeningList screeningList;
     address private owner;
     
     constructor() public {
-      //screeningList = ScreeningList(_address);
       owner = msg.sender;
     }
-        
-	enum Status { Initiated,Pending,Approved,Rejected }
-	enum CustomerType { Banking,Retail,Corporate }
-
-	struct CustomerDetails {
-	    address accountAddress;
-	    bytes12 account;
+    
+    enum CustomerType { Banking,Retail,Corporate }
+    
+    struct CustomerDetails {
+        bytes12 account;
 		bytes32 name;
-		Status kycStatus;
 		CustomerType customerType;
 		bool isParentCustomer;
-	}
-	
-	address[] private addressesList;
+    }
+    
+    address[] private addressesList;
 	mapping(address => CustomerDetails) private customerDetailsMap;
 	
 	modifier onlyOwner(address _account) {
         require(msg.sender == _account, "Unauthorized Access!");
         _;
     }
-
-	/**
-    @dev Stores userDetails , KYC creation and validity dates
+    
+    /**
+    @dev Creates details of customers
     @param _accountAddress - Customer Account Address
     @param _account - Customer Account Number
-    @param _name - Name of the user
+    @param _name - Name of the customer
 	@param _customerType - Customer Type of user based on CustomerType enum
-	@param _kycStatus - KYC status of KYC form
 	@param _isParentCustomer - checks Parent or Subsidiary Customer
     */
-	function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType,Status _kycStatus,bool _isParentCustomer) external {
-	    //require(screeningList.checkIsBlackListed(_accountNumber) == false, "Customer is blacklisted");
-	    CustomerDetails memory customerDetails;
-		customerDetails.accountAddress  = _accountAddress;
-		customerDetails.account = _account;
-		customerDetails.name = _name;
-		customerDetails.customerType = _customerType;
-		customerDetails.kycStatus = _kycStatus;
-		customerDetails.isParentCustomer = _isParentCustomer;
-		customerDetailsMap[_accountAddress] = customerDetails;
-		addressesList.push(_accountAddress);
-	}
-	
+    function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
+        customerDetailsMap[_accountAddress].account = _account;
+        customerDetailsMap[_accountAddress].name = _name;
+        customerDetailsMap[_accountAddress].customerType = _customerType;
+        customerDetailsMap[_accountAddress].isParentCustomer = _isParentCustomer;
+        addressesList.push(_accountAddress);
+    }
     
-     /**
-	 @dev Updates user details, KYC validity dates
-	 @param _name - name of the user
+    /**
+	 @dev Updates customer details
+	 @param _accountAddress - Ethreum account address of customer
+	 @param _account - Name of account
+	 @param _name - Name of the user
 	 @param  _customerType - Customer Type of user based on CustomerType enum
-	 @param _kycStatus - KYC status of KYC form
-	 @param _isParentCustomer - checks 	Parent or Subsidiary Customer
+	 @param _isParentCustomer - Checks parent or subsidiary Customer
 	 */
-	function updateCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, Status _kycStatus, bool _isParentCustomer) onlyOwner(owner) external {
-	   // require(customerList[_accountNumber].accountNumber != 0, "User doesn't exist!");
-	    CustomerDetails memory customerDetails;
-		customerDetails.accountAddress = _accountAddress;
-		customerDetails.account = _account;
-		customerDetails.name = _name;
-		customerDetails.customerType = _customerType;
-		customerDetails.kycStatus = _kycStatus;
-		customerDetails.isParentCustomer = _isParentCustomer;
-		customerDetailsMap[_accountAddress] = customerDetails;
+    function updateCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
+	    customerDetailsMap[_accountAddress].account = _account;
+        customerDetailsMap[_accountAddress].name = _name;
+        customerDetailsMap[_accountAddress].customerType = _customerType;
+        customerDetailsMap[_accountAddress].isParentCustomer = _isParentCustomer;
 	}
 	
-	/**
-	@dev Retrieves the customer Details from blockchain
-	@param _accountAddress Account address of customer
-	@return bytes12 Account of customer
-	@return bytes32 Name of customer
-	@return CustomerType Type of Customer
-	@return Status KYC Status of customer
-	@return bool Parent or Subsidiary customer
+    /**
+	@dev Retrieves the customer details of a particular customer
+	@param _accountAddress - Account address of customer
+	@return bytes12 - Account of customer
+	@return bytes32 - Name of customer
+	@return CustomerType - Type of Customer
+	@return bool - Parent or Subsidiary customer
 	*/
-	function getCustomerDetails(address _accountAddress) view external returns(bytes12, bytes32, CustomerType, Status, bool) {
-		return (customerDetailsMap[_accountAddress].account, customerDetailsMap[_accountAddress].name, customerDetailsMap[_accountAddress].customerType, customerDetailsMap[_accountAddress].kycStatus, customerDetailsMap[_accountAddress].isParentCustomer);
-	}
-	
-	/**
-	@dev Retrieves the details of all customerDetailsMap
-	@return address[100] Account addresses of customerDetailsMap
-	@return bytes12[100] Accounts of customerDetailsMap
-	@return bytes32[100] Names of customers
-	@return custType[100] Types of customers
-	@return status[100] Statuses of customers
-	@return bool[100] Parent or Subsidiary
+    function getCustomerDetails(address _accountAddress) onlyOwner(owner) view external returns(bytes12, bytes32, CustomerType, bool) {
+        return(customerDetailsMap[_accountAddress].account, 
+               customerDetailsMap[_accountAddress].name,
+               customerDetailsMap[_accountAddress].customerType,
+               customerDetailsMap[_accountAddress].isParentCustomer);
+    }
+    
+    /**
+	@dev Retrieves the details of all the customers
+	@return address[50] - Ethereum account addresses of customer
+	@return bytes12[50] - Account of customer
+	@return bytes32[50] - Names of customer
+	@return CustomerType[50] - Types of customers
+	@return bool[50] - Parent or Subsidiary
 	*/
-	function getAllCustomerDetails() view external returns(address[100] custAddress, bytes12[100] account, bytes32[100] name, CustomerType[100] custType, Status[100] status, bool[100] isParent) {
-	    for(uint count = 0; count < addressesList.length; count++) {
-	        custAddress[count] = addressesList[count];
-	        account[count] = customerDetailsMap[addressesList[count]].account;
-	        name[count] = customerDetailsMap[addressesList[count]].name;
-	        custType[count] = customerDetailsMap[addressesList[count]].customerType;
-	        status[count] = customerDetailsMap[addressesList[count]].kycStatus;
-	        isParent[count] = customerDetailsMap[addressesList[count]].isParentCustomer;
-	        return (custAddress, account, name, custType, status, isParent);
-	    }
-	}
-	
-	function createCustomerDetailsBatch(address[] _accountAddresses, bytes12[] _accounts, bytes32[] _names, CustomerType[] _custTypes, bool[] _isParent) external {
-	    for(uint index = 0; index < _accountAddresses.length; index++) {
-	        CustomerDetails memory custDetails = CustomerDetails(
-	            _accountAddresses[index], 
-	            _accounts[index],
-	            _names[index],
-	            Status.Initiated,
-	            _custTypes[index],
-	            _isParent[index]);
-					        
-    		customerDetailsMap[_accountAddresses[index]] = custDetails;
-    		addressesList.push(_accountAddresses[index]);
-	    }
-	}	
+    function getAllCustomerDetails() onlyOwner(owner) view external returns(address[50] addresses, bytes12[50] accounts, bytes32[50] names, CustomerType[50] custTypes, bool[50] isParent) {
+        for(uint index = 0; index < addressesList.length; index++) {
+            addresses[index] = addressesList[index];
+            accounts[index] = customerDetailsMap[addressesList[index]].account;
+            names[index] = customerDetailsMap[addressesList[index]].name;
+            custTypes[index] = customerDetailsMap[addressesList[index]].customerType;
+            isParent[index] = customerDetailsMap[addressesList[index]].isParentCustomer;
+        }
+    }
+    
+    /**
+     @dev Creates details of multiple customers 
+     @param _addresses Ethereum account addresses of customers
+     @param _accounts Accounts of customers
+     @param _names Names of customers
+     @param _custTypes Customer Types
+     @param _isParent Parent or Subsidiary
+     */
+    function createCustomerDetailsBatch(address[] _addresses, bytes12[] _accounts, bytes32[] _names, CustomerType[10] _custTypes, bool[] _isParent) onlyOwner(owner) external {
+        for(uint index = 0; index < _addresses.length; index++) {
+            customerDetailsMap[_addresses[index]].account = _accounts[index];
+            customerDetailsMap[_addresses[index]].name = _names[index];
+            customerDetailsMap[_addresses[index]].customerType = _custTypes[index];
+            customerDetailsMap[_addresses[index]].isParentCustomer = _isParent[index];
+            addressesList.push(_addresses[index]);
+        }
+    }
 }

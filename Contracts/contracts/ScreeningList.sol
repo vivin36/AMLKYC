@@ -1,16 +1,18 @@
 pragma solidity ^0.4.23;
 /**
- * @title ScreeningList
- */
+* @title ScreeningList
+*/
 contract ScreeningList {
 
     struct Customer {
-        bytes12 accountNumber;
+        bytes12 identificationNumber;
         bytes32 name;
     }
 
-    Customer[] private blackListedCustomers;
-    Customer[] private whiteListedCustomers;
+    address[] private blackListedCustomerAddresses;
+    address[] private whiteListedCustomerAddresses;
+    
+    mapping(address => Customer) customerMap;
     
     address private owner = msg.sender;
 
@@ -21,25 +23,27 @@ contract ScreeningList {
 
     /**
      * @dev Adds a blacklisted customer
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account Address
+     * @param _identificationNumber Customer Identification Number
      * @param _name Customer Name
      */
-    function addBlackListedCustomer(bytes12 _accountNumber, bytes32 _name) onlyOwner(owner) external {
+    function addBlackListedCustomer(address _accountAddress, bytes12 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
         Customer memory customer;
-        customer.accountNumber = _accountNumber;
+        customer.identificationNumber = _identificationNumber;
         customer.name = _name;
-
-        blackListedCustomers.push(customer);
+        
+        blackListedCustomerAddresses.push(_accountAddress);
+        customerMap[_accountAddress] = customer;
     }
     
     /**
      * @dev Removes a blacklisted customer
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account Address
      */
-    function removeBlackListedCustomer(bytes12 _accountNumber) onlyOwner(owner) external {
-        for(uint index = 0; index < blackListedCustomers.length; index++) {
-            if(blackListedCustomers[index].accountNumber == _accountNumber) {
-                delete blackListedCustomers[index];
+    function removeBlackListedCustomer(address _accountAddress) onlyOwner(owner) external {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+            if(blackListedCustomerAddresses[index] == _accountAddress) {
+                delete blackListedCustomerAddresses[index];
                 break;
             }
         }
@@ -47,25 +51,23 @@ contract ScreeningList {
 
     /**
      * @dev Retrieves a black listed company based on id
-     * @param _accountNumber Customer Account Number
-     * @return string
      */ 
-    function getBlackListedCustomer(bytes12 _accountNumber) external view returns (bytes32) {
-        for(uint index = 0; index < blackListedCustomers.length; index++) {
-            if(blackListedCustomers[index].accountNumber == _accountNumber) {
-                return (blackListedCustomers[index].name);
-            }
+    function getBlackListedCustomers() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+            _addresses[index] = blackListedCustomerAddresses[index];
+            _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
+            _names[index] = customerMap[_addresses[index]].name;
         }
     }
     
     /**
      * @dev Checks whether a company is black listed or not
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account address
      * @return bool
      */
-    function checkIsBlackListed(bytes12 _accountNumber) external view returns (bool) {
-        for(uint index = 0; index < blackListedCustomers.length; index++) {
-            if(blackListedCustomers[index].accountNumber == _accountNumber) {
+    function checkIsBlackListed(address _accountAddress) external view returns (bool) {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+            if(blackListedCustomerAddresses[index] == _accountAddress) {
                 return true;
             }
         }
@@ -73,25 +75,27 @@ contract ScreeningList {
     
     /**
      * @dev Adds a whitelisted customer
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account Address
+     * @param _identificationNumber Customer Identification Number
      * @param _name Customer Name
      */
-    function addWhiteListedCustomer(bytes12 _accountNumber, bytes32 _name) onlyOwner(owner) external {
+    function addWhiteListedCustomer(address _accountAddress, bytes12 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
         Customer memory customer;
-        customer.accountNumber = _accountNumber;
+        customer.identificationNumber  = _identificationNumber;
         customer.name = _name;
 
-        whiteListedCustomers.push(customer);
+        whiteListedCustomerAddresses.push(_accountAddress);
+        customerMap[_accountAddress] = customer;
     }
     
     /**
      * @dev Removes a whitelisted customer
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account Number
      */
-    function removeWhiteListedCustomer(bytes12 _accountNumber) onlyOwner(owner) external {
-        for(uint index = 0; index < blackListedCustomers.length; index++) {
-            if(whiteListedCustomers[index].accountNumber == _accountNumber) {
-                delete whiteListedCustomers[index];
+    function removeWhiteListedCustomer(address _accountAddress) onlyOwner(owner) external {
+        for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+            if(whiteListedCustomerAddresses[index] == _accountAddress) {
+                delete whiteListedCustomerAddresses[index];
                 break;
             }
         }
@@ -99,27 +103,26 @@ contract ScreeningList {
 
     /**
      * @dev Retrieves a white listed company based on id
-     * @param _accountNumber Customer Account Number
-     * @return string
      */ 
-    function getWhiteListedCustomer(bytes12 _accountNumber) external view returns (bytes32) {
-        for(uint index = 0; index < whiteListedCustomers.length; index++) {
-            if(whiteListedCustomers[index].accountNumber == _accountNumber) {
-                return (whiteListedCustomers[index].name);
-            }
+    function getWhiteListedCustomer() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
+        for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+            _addresses[index] = whiteListedCustomerAddresses[index];
+            _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
+            _names[index] = customerMap[_addresses[index]].name;
         }
     }
     
     /**
      * @dev Checks whether a company is white listed or not
-     * @param _accountNumber Customer Account Number
+     * @param _accountAddress Customer Account Address
      * @return bool
      */
-    function checkIsWhiteListed(bytes12 _accountNumber) external view returns (bool) {
-        for(uint index = 0; index < whiteListedCustomers.length; index++) {
-            if(whiteListedCustomers[index].accountNumber == _accountNumber) {
+    function checkIsWhiteListed(address _accountAddress) external view returns (bool) {
+           for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+            if(whiteListedCustomerAddresses[index] == _accountAddress) {
                 return true;
             }
         }
     }
 }
+ 

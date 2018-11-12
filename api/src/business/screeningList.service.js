@@ -25,8 +25,8 @@ let blackListCustomer = async (accountNumber, name, identificationNumber) => {
 
 let getAllBlackListedCustomers = async () => {
     try {
-        let BlackListedCustomersList = [];
-        let BlackListedCustomers = {};
+        let blackListedCustomersList = [];
+        let blackListedCustomers = {};
 
         const customerResponse = await screeningListInstance.methods.getBlackListedCustomers().call();
         const addressesList = customerResponse[0].filter(elem => elem != '0x0000000000000000000000000000000000000000');
@@ -34,11 +34,11 @@ let getAllBlackListedCustomers = async () => {
         const identificationNumbersList = customerResponse[2].filter(elem => elem != '0x0000000000000000000000000000000000000000');
 
         for (var count = 0; count < addressesList.length; count++) {
-            BlackListedCustomers.address = addressesList[count];
-            BlackListedCustomers.identificationNumber = web3.utils.toAscii(identificationNumbersList[count]).replace(/\0/g, '');
-            BlackListedCustomers.name = web3.utils.toAscii(namesList[count]).replace(/\0/g, '');
-            BlackListedCustomersList.push(BlackListedCustomers);
-            BlackListedCustomers = {};
+            blackListedCustomers.address = addressesList[count];
+            blackListedCustomers.identificationNumber = web3.utils.toAscii(identificationNumbersList[count]).replace(/\0/g, '');
+            blackListedCustomers.name = web3.utils.toAscii(namesList[count]).replace(/\0/g, '');
+            blackListedCustomersList.push(blackListedCustomers);
+            blackListedCustomers = {};
         }
 
         return Promise.resolve(BlackListedCustomersList);
@@ -61,15 +61,14 @@ let whiteListCustomer = async (accountNumber, name, identificationNumber) => {
             });
         return Promise.resolve();
     } catch (err) {
-        console.log('error', err);
         return Promise.reject(err);
     }
 };
 
 let getAllwhiteListCustomers = async () => {
     try {
-        let BlackListedCustomersList = [];
-        let BlackListedCustomers = {};
+        let whiteListedCustomersList = [];
+        let whiteListedCustomers = {};
 
         const customerResponse = await screeningListInstance.methods.getWhiteListedCustomer().call();
         const addressesList = customerResponse[0].filter(elem => elem != '0x0000000000000000000000000000000000000000');
@@ -77,14 +76,14 @@ let getAllwhiteListCustomers = async () => {
         const identificationNumbersList = customerResponse[2].filter(elem => elem != '0x0000000000000000000000000000000000000000');
 
         for (var count = 0; count < addressesList.length; count++) {
-            BlackListedCustomers.address = addressesList[count];
-            BlackListedCustomers.identificationNumber = web3.utils.toAscii(identificationNumbersList[count]).replace(/\0/g, '');
-            BlackListedCustomers.name = web3.utils.toAscii(namesList[count]).replace(/\0/g, '');
-            BlackListedCustomersList.push(BlackListedCustomers);
-            BlackListedCustomers = {};
+            whiteListedCustomers.address = addressesList[count];
+            whiteListedCustomers.identificationNumber = web3.utils.toAscii(identificationNumbersList[count]).replace(/\0/g, '');
+            whiteListedCustomers.name = web3.utils.toAscii(namesList[count]).replace(/\0/g, '');
+            whiteListedCustomersList.push(whiteListedCustomers);
+            whiteListedCustomers = {};
         }
 
-        return Promise.resolve(BlackListedCustomersList);
+        return Promise.resolve(whiteListedCustomersList);
     } catch (err) {
         return Promise.reject(err);
     }

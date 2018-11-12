@@ -33,9 +33,9 @@ let upload = multer({
 });
 
 router.post('/', async (req, res) => {
-  const { account, name, customerType, kycStatus, isParentCustomer } = req.body;
+  const { account, name, customerType, isParentCustomer } = req.body;
   try {
-    let customerDetails = await createCustomerDetails(account, name, customerType, kycStatus, isParentCustomer);
+    let customerDetails = await createCustomerDetails(account, name, customerType, isParentCustomer);
     res.status(200).json(customerDetails);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -53,10 +53,10 @@ router.put('/:address', async (req, res) => {
   }
 });
 
-router.get('/:accountNumber', async (req, res) => {
+router.get('/:address', async (req, res) => {
   try {
-    const { accountNumber } = req.params;    
-    let customerDetails = await getCustomerDetails(accountNumber);
+    const { address } = req.params;    
+    let customerDetails = await getCustomerDetails(address);
     res.status(200).json(customerDetails);
   } catch (err) {
     res.status(500).json({ error: err.message });

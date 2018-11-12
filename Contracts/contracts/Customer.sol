@@ -96,7 +96,7 @@ contract Customer {
      @param _custTypes Customer Types
      @param _isParent Parent or Subsidiary
      */
-    function createCustomerDetailsBatch(address[] _addresses, bytes12[] _accounts, bytes32[] _names, CustomerType[10] _custTypes, bool[] _isParent) onlyOwner(owner) external {
+    function createCustomerDetailsBatch(address[] _addresses, bytes12[] _accounts, bytes32[] _names, CustomerType[] _custTypes, bool[] _isParent) onlyOwner(owner) external {
         for(uint index = 0; index < _addresses.length; index++) {
             customerDetailsMap[_addresses[index]].account = _accounts[index];
             customerDetailsMap[_addresses[index]].name = _names[index];

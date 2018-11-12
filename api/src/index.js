@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/customers', customers);
-app.use('/screeningList', screeningList);
+app.use('/screeningLists', screeningList);
 app.get('/healthcheck', async (req, res) => res.sendStatus(200));
 
 const main = async () => {

@@ -53,10 +53,10 @@ contract ScreeningList {
      * @dev Retrieves a black listed company based on id
      */ 
     function getBlackListedCustomers() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
-        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {            
             _addresses[index] = blackListedCustomerAddresses[index];
             _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
-            _names[index] = customerMap[_addresses[index]].name;
+            _names[index] = customerMap[_addresses[index]].name;            
         }
     }
     
@@ -104,11 +104,13 @@ contract ScreeningList {
     /**
      * @dev Retrieves a white listed company based on id
      */ 
-    function getWhiteListedCustomer() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
+    function getWhiteListedCustomers() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
         for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
-            _addresses[index] = whiteListedCustomerAddresses[index];
-            _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
-            _names[index] = customerMap[_addresses[index]].name;
+            if(whiteListedCustomerAddresses[index] != 0x0) {
+                _addresses[index] = whiteListedCustomerAddresses[index];
+                _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
+                _names[index] = customerMap[_addresses[index]].name;
+            }
         }
     }
     
@@ -118,11 +120,38 @@ contract ScreeningList {
      * @return bool
      */
     function checkIsWhiteListed(address _accountAddress) external view returns (bool) {
-           for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+        for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
             if(whiteListedCustomerAddresses[index] == _accountAddress) {
                 return true;
             }
         }
     }
+    
+    /**
+     * @dev Create details of multiple blacklisted customers
+     * @param _addresses Customer account addresses
+     * @param _identificationNumbers identification numbers
+     * @param _names Customer names
+     */
+    function addBlackListedCustomersBatch(address[] _addresses, bytes12[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
+        for(uint index = 0; index < _addresses.length; index++) {
+            customerMap[_addresses[index]].identificationNumber = _identificationNumbers[index];
+            customerMap[_addresses[index]].name = _names[index];
+            blackListedCustomerAddresses.push(_addresses[index]);
+        }
+    }
+    
+    /**
+     * @dev Create details of multiple whitelisted customers
+     * @param _addresses Customer account addresses
+     * @param _identificationNumbers identification numbers
+     * @param _names Customer names
+     */
+    function addWhiteListedCustomersBatch(address[] _addresses, bytes12[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
+        for(uint index = 0; index < _addresses.length; index++) {
+            customerMap[_addresses[index]].identificationNumber = _identificationNumbers[index];
+            customerMap[_addresses[index]].name = _names[index];
+            whiteListedCustomerAddresses.push(_addresses[index]);
+        }
+    }
 }
- 

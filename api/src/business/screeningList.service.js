@@ -102,6 +102,18 @@ let checkIsWhiteListed = async (accountAddress) => {
     }
 };
 
+let checkIsBlackListed = async (accountAddress) => {
+    try {
+        const screeningListResponse = await screeningListInstance.methods.checkIsBlackListed(accountAddress).call();
+        let response = {
+            isBlackListed: screeningListResponse
+        }
+        return Promise.resolve(response);
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
 let removeFromBlackListedCustomer = async (accountAddress) => {
     try {
         const accounts = await web3.eth.getAccounts();
@@ -129,12 +141,15 @@ let removeFromWhiteListedCustomer = async (accountAddress) => {
 };
 
 
+
+
 export {
     blackListCustomer,
-    getAllBlackListedCustomers,
     whiteListCustomer,
+    getAllBlackListedCustomers,
     getAllwhiteListCustomers,
     checkIsWhiteListed,
+    checkIsBlackListed,
     removeFromBlackListedCustomer,
     removeFromWhiteListedCustomer
 };

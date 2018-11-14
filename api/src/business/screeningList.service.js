@@ -1,7 +1,11 @@
 import Web3 from '../web3';
 import screeningListMetaData from '../../../Contracts/build/contracts/ScreeningList.json';
 import config from '../config/config';
+import csvdata from 'csvdata';
 
+const options = {
+    parse: false,
+};
 const web3 = Web3();
 const screeningListInstance = new web3.eth.Contract(screeningListMetaData.abi, screeningListMetaData.networks[config.development.network_id].address);
 
@@ -140,8 +144,53 @@ let removeFromWhiteListedCustomer = async (accountAddress) => {
     }
 };
 
+let uploadWhiteListFile = async (filePath) => {
+    try {
+        const { addresses, identifications, names } = await validateAndParseFile(filePath);
+        const accounts = await web3.eth.getAccounts();
+        await screeningListInstance.methods.addWhiteListedCustomersBatch(
+            addresses,
+            identifications,
+            names,
+            {
+                from: accounts[0],
+                gas: 4700000
+            });        
+        return Promise.resolve();
+    } catch(err) {
+        return Promise.reject(err);
+    }
+};
 
+let uploadBlackListFile = async (filePath) => {
+    try {
+        const { addresses, identifications, names } = await validateAndParseFile(filePath);
+        const accounts = await web3.eth.getAccounts();
+        await screeningListInstance.methods.addBlackListedCustomersBatch(
+            addresses,
+            identifications,
+            names,
+            {
+                from: accounts[0],
+                gas: 4700000
+            });
+        return Promise.resolve();        
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
 
+let validateAndParseFile = async(filePath) => {        
+    let addresses = [], identifications = [], names = [];
+    let parsedData = await csvdata.load(filePath, [options]);
+
+    for(var count = 0; count < parsedData.length; count++) {        
+        addresses.push(parsedData[count].ADDRESS);
+        identifications.push(parsedData[count].IDENTIFICATION_NUMBER);
+        names.push(parsedData[count].CUSTOMER_NAME);
+    }
+    return ({addresses, identifications, names});
+};
 
 export {
     blackListCustomer,
@@ -151,5 +200,7 @@ export {
     checkIsWhiteListed,
     checkIsBlackListed,
     removeFromBlackListedCustomer,
-    removeFromWhiteListedCustomer
+    removeFromWhiteListedCustomer,
+    uploadWhiteListFile,
+    uploadBlackListFile
 };

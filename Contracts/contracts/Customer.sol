@@ -8,6 +8,9 @@ contract Customer {
     }
     
     enum CustomerType { Banking,Retail,Corporate }
+
+  event CustomerCreated(address _accountAddress, bytes12 _customerType, bytes32 _name);
+  event UpdatedCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name);
     
     struct CustomerDetails {
         bytes12 account;
@@ -38,6 +41,7 @@ contract Customer {
         customerDetailsMap[_accountAddress].customerType = _customerType;
         customerDetailsMap[_accountAddress].isParentCustomer = _isParentCustomer;
         addressesList.push(_accountAddress);
+        emit CustomerCreated(_accountAddress,_account,_name);
     }
     
     /**
@@ -53,6 +57,7 @@ contract Customer {
         customerDetailsMap[_accountAddress].name = _name;
         customerDetailsMap[_accountAddress].customerType = _customerType;
         customerDetailsMap[_accountAddress].isParentCustomer = _isParentCustomer;
+        emit UpdatedCustomerDetails(_accountAddress, _account, _name);
 	}
 	
     /**
@@ -103,6 +108,7 @@ contract Customer {
             customerDetailsMap[_addresses[index]].customerType = _custTypes[index];
             customerDetailsMap[_addresses[index]].isParentCustomer = _isParent[index];
             addressesList.push(_addresses[index]);
+            emit CustomerCreated(_addresses[index],_accounts[index],_names[index]);
         }
     }
 }

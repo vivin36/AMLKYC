@@ -3,6 +3,9 @@ api/dist
 api/node_modules
 api/package-lock.json
 
+NodeJS/ui-src/node_modules
+NodeJS/api/node_modules
+NodeJS/api/dist
+NodeJS/Contracts/build
 ui-src/node_modules
 ui-src/build
-

@@ -9,3 +9,8 @@ NodeJS/api/dist
 NodeJS/Contracts/build
 ui-src/node_modules
 ui-src/build
+
+/Java/.metadata/
+/Java/.recommenders/
+/Java/amlkyc/.settings/
+/Java/amlkyc/target/

@@ -2,11 +2,11 @@ package com.blockchain.protocol.web3;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
-@Service
+@Component
 public class Web3Connector implements InitializingBean {
 	
 	@Value("${web3.connection.url}")

@@ -46,11 +46,10 @@ public class ContractsDeployer implements InitializingBean {
 	}
 	
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception  {
 		credentials = Credentials.create(coinbasePrivateKey);
 		customerContract = Customer.deploy(web3Connector.getConnection(), credentials, 
 				new BigInteger(gasPrice), new BigInteger(gasLimit)).send();
-		System.out.println(customerContract);
 	}
 
 }

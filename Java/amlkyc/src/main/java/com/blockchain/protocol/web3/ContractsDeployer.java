@@ -50,6 +50,7 @@ public class ContractsDeployer implements InitializingBean {
 		credentials = Credentials.create(coinbasePrivateKey);
 		customerContract = Customer.deploy(web3Connector.getConnection(), credentials, 
 				new BigInteger(gasPrice), new BigInteger(gasLimit)).send();
+		System.out.println(customerContract);
 	}
 
 }

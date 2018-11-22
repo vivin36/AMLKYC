@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.blockchain.api.CustomerController;
 import com.blockchain.api.HealthCheck;
+import com.blockchain.api.ScreeninglistController;
 
 @Component
 public class JerseyConfig extends ResourceConfig {
@@ -12,5 +13,6 @@ public class JerseyConfig extends ResourceConfig {
 	public JerseyConfig() {
         register(HealthCheck.class);
         register(CustomerController.class);
+        register(ScreeninglistController.class);
     }
 }

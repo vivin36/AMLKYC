@@ -12,4 +12,6 @@ public interface IScreeninglistService {
 	public List<ScreeninglistVO> getAllblackListCustomers();
 	public boolean checkIsWhiteListed(String accountAddress);
 	public boolean checkIsBlackListed(String accountAddress);
+	public String removeFromBlackList(String accountAddress);
+	public void removeFromWhiteList(String accountAddress);
 }

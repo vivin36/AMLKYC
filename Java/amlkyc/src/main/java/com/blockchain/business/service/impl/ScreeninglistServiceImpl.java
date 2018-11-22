@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tuples.generated.Tuple3;
 import org.web3j.utils.Numeric;
 
@@ -55,6 +56,14 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public List<ScreeninglistVO> getAllwhiteListCustomers() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		try {
+			Tuple3<List<String>, List<byte[]>, List<byte[]>> whiteListedCustomers = ScreeninglistContract.getWhiteListedCustomers().send();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 
@@ -88,6 +97,32 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			e.printStackTrace();
 		}
 		return response;
+	}
+
+
+	@Override
+	public String removeFromBlackList(String accountAddress) {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		TransactionReceipt reponse = null;
+		try {
+			 reponse = ScreeninglistContract.removeBlackListedCustomer(accountAddress).send();
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return reponse.getTransactionHash();
+	}
+
+
+	@Override
+	public void removeFromWhiteList(String accountAddress) {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		TransactionReceipt reponse = null;
+		try {
+			 reponse = ScreeninglistContract.removeWhiteListedCustomer(accountAddress).send();
+		} catch (Exception e) {		
+			e.printStackTrace();
+		}
+		
 	}
 
 }

@@ -3,6 +3,7 @@ package com.blockchain.api;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -68,6 +69,22 @@ public class ScreeninglistController {
 	public boolean checkIsBlacklists(@PathParam("accountAddress") String accountAddress) {
 		return screeninglistService.checkIsBlackListed(accountAddress);
 	}
+	
+	@Path("/blacklists/{accountAddress}")
+	@DELETE
+	public String removeFromBlackList(@PathParam("accountAddress") String accountAddress) {
+		 screeninglistService.removeFromBlackList(accountAddress);
+		 return accountAddress;
+	}
+	
+	@Path("/whitelists/{accountAddress}")
+	@DELETE
+	public String removeFromWhiteList(@PathParam("accountAddress") String accountAddress) {
+		 screeninglistService.removeFromWhiteList(accountAddress);
+		 return accountAddress;
+	}
+
+
 
 
 }

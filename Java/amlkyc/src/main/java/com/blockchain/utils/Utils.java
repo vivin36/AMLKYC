@@ -23,7 +23,7 @@ public class Utils {
         {
             String str = hexValue.substring(i, i + 2);
             output.append((char) Integer.parseInt(str, 16));
-        }
-        return output.toString();
+        }       
+        return output.toString().replaceAll("\\u0000", "");
     }
 }

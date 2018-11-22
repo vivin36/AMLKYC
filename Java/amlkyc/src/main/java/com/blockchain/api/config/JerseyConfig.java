@@ -10,6 +10,7 @@ import com.blockchain.api.HealthCheck;
 public class JerseyConfig extends ResourceConfig {
 	
 	public JerseyConfig() {
+		packages("com");
         register(HealthCheck.class);
         register(CustomerController.class);
     }

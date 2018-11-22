@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.web3j.crypto.Credentials;
 
 import com.blockchain.contracts.Customer;
+import com.blockchain.contracts.Screeninglist;
 
 @Component
 public class ContractsDeployer implements InitializingBean {
@@ -26,6 +27,7 @@ public class ContractsDeployer implements InitializingBean {
 	private Web3Connector web3Connector;
 	
 	private Customer customerContract = null;
+	private Screeninglist ScreeningListContract = null;
 
 	private Credentials credentials = null;
 	
@@ -50,6 +52,18 @@ public class ContractsDeployer implements InitializingBean {
 		credentials = Credentials.create(coinbasePrivateKey);
 		customerContract = Customer.deploy(web3Connector.getConnection(), credentials, 
 				new BigInteger(gasPrice), new BigInteger(gasLimit)).send();
+		
+		ScreeningListContract = Screeninglist.deploy(web3Connector.getConnection(), credentials,
+				new BigInteger(gasPrice), new BigInteger(gasLimit)).send();
+		
+	}
+
+	public Screeninglist getScreeningListContract() {
+		return ScreeningListContract;
+	}
+
+	public void setScreeningListContract(Screeninglist screeningListContract) {
+		ScreeningListContract = screeningListContract;
 	}
 
 }

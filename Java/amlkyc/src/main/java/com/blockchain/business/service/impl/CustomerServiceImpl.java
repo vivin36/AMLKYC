@@ -8,6 +8,7 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Wallet;
 import org.web3j.crypto.WalletFile;
+import org.web3j.tuples.generated.Tuple4;
 import org.web3j.utils.Numeric;
 
 import com.blockchain.business.service.ICustomerService;
@@ -38,13 +39,51 @@ public class CustomerServiceImpl implements ICustomerService {
 			customerContract.createCustomerDetails(walletFile.getAddress(),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(customerVO.getAccount())),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(customerVO.getName())),
-					BigInteger.valueOf(customerVO.getCustomerType()), customerVO.getIsParentCustomer()).send();
+					new BigInteger(customerVO.getCustomerType()), customerVO.getIsParentCustomer()).send();
 		} catch (Exception e) {
-			throw new ApplicationException("Error in creating customer details");
+			throw new ApplicationException("Error in creating customer details!");
 		}
 		customerVO.setAddress(walletFile.getAddress());
 
 		return customerVO;
 	}
+
+	@Override
+	public CustomerVO updateCustomer(CustomerVO customerVO) {
+		
+		Customer customerContract = contractsDeployer.getCustomerContract();
+		
+		try {
+			customerContract.updateCustomerDetails(customerVO.getAddress(),
+					Numeric.hexStringToByteArray(Utils.ASCIIToHex(customerVO.getAccount())),
+					Numeric.hexStringToByteArray(Utils.ASCIIToHex(customerVO.getName())),
+					new BigInteger(customerVO.getCustomerType()), customerVO.getIsParentCustomer()).send();
+		} catch (Exception e) {
+			throw new ApplicationException("Error in updating customer details!");			
+		}
+		
+		return customerVO;
+	}
+
+	@Override
+	public CustomerVO getCustomerByAddress(String address) {
+		
+		CustomerVO customerVO = new CustomerVO();
+		Customer customerContract = contractsDeployer.getCustomerContract();		
+		
+		try {
+			Tuple4<byte[], byte[], BigInteger, Boolean> txnResponse = customerContract.getCustomerDetails(address).send();
+			customerVO.setAddress(address);
+			customerVO.setAccount(Utils.hexToASCII(Numeric.toHexString(txnResponse.getValue1())));
+			customerVO.setName(Utils.hexToASCII(Numeric.toHexString(txnResponse.getValue2())));
+			customerVO.setCustomerType(String.valueOf(txnResponse.getValue3()));
+			customerVO.setIsParentCustomer(txnResponse.getValue4());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ApplicationException("Error in retrieving customer details!");
+		}
+		
+		return customerVO;
+	}	
 
 }

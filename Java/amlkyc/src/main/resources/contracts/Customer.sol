@@ -9,11 +9,11 @@ contract Customer {
     
     enum CustomerType { Banking,Retail,Corporate }
 
-  event CustomerCreated(address _accountAddress, bytes12 _customerType, bytes32 _name);
-  event UpdatedCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name);
+  event CustomerCreated(address _accountAddress, bytes32 _customerType, bytes32 _name);
+  event UpdatedCustomerDetails(address _accountAddress, bytes32 _account, bytes32 _name);
     
     struct CustomerDetails {
-        bytes12 account;
+        bytes32 account;
 		bytes32 name;
 		CustomerType customerType;
 		bool isParentCustomer;
@@ -35,7 +35,7 @@ contract Customer {
 	@param _customerType - Type of customer
 	@param _isParentCustomer - Parent or subsidiary customer
     */
-    function createCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
+    function createCustomerDetails(address _accountAddress, bytes32 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
         customerDetailsMap[_accountAddress].account = _account;
         customerDetailsMap[_accountAddress].name = _name;
         customerDetailsMap[_accountAddress].customerType = _customerType;
@@ -52,7 +52,7 @@ contract Customer {
 	 @param  _customerType - Type of customer
 	 @param _isParentCustomer - Parent or subsidiary customer
 	 */
-    function updateCustomerDetails(address _accountAddress, bytes12 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
+    function updateCustomerDetails(address _accountAddress, bytes32 _account, bytes32 _name, CustomerType _customerType, bool _isParentCustomer) onlyOwner(owner) external {
 	    customerDetailsMap[_accountAddress].account = _account;
         customerDetailsMap[_accountAddress].name = _name;
         customerDetailsMap[_accountAddress].customerType = _customerType;
@@ -63,12 +63,12 @@ contract Customer {
     /**
 	@dev Retrieves the customer details of a particular customer
 	@param _accountAddress - Ethereum account address of customer
-	@return bytes12 - Account of customer
+	@return bytes32 - Account of customer
 	@return bytes32 - Name of customer
 	@return CustomerType - Type of Customer
 	@return bool - Parent or Subsidiary customer
 	*/
-    function getCustomerDetails(address _accountAddress) onlyOwner(owner) view external returns(bytes12, bytes32, CustomerType, bool) {
+    function getCustomerDetails(address _accountAddress) onlyOwner(owner) view external returns(bytes32, bytes32, CustomerType, bool) {
         return(customerDetailsMap[_accountAddress].account, 
                customerDetailsMap[_accountAddress].name,
                customerDetailsMap[_accountAddress].customerType,
@@ -78,12 +78,12 @@ contract Customer {
     /**
 	@dev Retrieves the details of all the customers
 	@return address[50] - Ethereum account addresses of customer
-	@return bytes12[50] - Account of customer
+	@return bytes32[50] - Account of customer
 	@return bytes32[50] - Names of customer
 	@return CustomerType[50] - Types of customers
 	@return bool[50] - Parent or Subsidiary
 	*/
-    function getAllCustomerDetails() onlyOwner(owner) view external returns(address[50] addresses, bytes12[50] accounts, bytes32[50] names, CustomerType[50] custTypes, bool[50] isParent) {
+    function getAllCustomerDetails() onlyOwner(owner) view external returns(address[50] addresses, bytes32[50] accounts, bytes32[50] names, CustomerType[50] custTypes, bool[50] isParent) {
         for(uint index = 0; index < addressesList.length; index++) {
             addresses[index] = addressesList[index];
             accounts[index] = customerDetailsMap[addressesList[index]].account;
@@ -101,7 +101,7 @@ contract Customer {
      @param _custTypes Customer Types
      @param _isParent Parent or Subsidiary
      */
-    function createCustomerDetailsBatch(address[] _addresses, bytes12[] _accounts, bytes32[] _names, CustomerType[] _custTypes, bool[] _isParent) onlyOwner(owner) external {
+    function createCustomerDetailsBatch(address[] _addresses, bytes32[] _accounts, bytes32[] _names, CustomerType[] _custTypes, bool[] _isParent) onlyOwner(owner) external {
         for(uint index = 0; index < _addresses.length; index++) {
             customerDetailsMap[_addresses[index]].account = _accounts[index];
             customerDetailsMap[_addresses[index]].name = _names[index];

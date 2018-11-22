@@ -5,7 +5,7 @@ public class CustomerVO {
 	private String address;
 	private String account;
 	private String name;
-	private Integer customerType;
+	private String customerType;
 	private Boolean isParentCustomer;
 	
 	public String getAddress() {
@@ -26,10 +26,10 @@ public class CustomerVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getCustomerType() {
+	public String getCustomerType() {
 		return customerType;
 	}
-	public void setCustomerType(Integer customerType) {
+	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
 	}
 	public Boolean getIsParentCustomer() {

@@ -14,3 +14,6 @@ ui-src/build
 /Java/.recommenders/
 /Java/amlkyc/.settings/
 /Java/amlkyc/target/
+Java/amlkyc/.project
+Java/amlkyc/.classpath
+Java/amlkyc/.factorypath

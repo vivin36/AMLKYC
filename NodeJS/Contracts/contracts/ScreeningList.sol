@@ -5,7 +5,7 @@ pragma solidity ^0.4.23;
 contract ScreeningList {
 
     struct Customer {
-        bytes12 identificationNumber;
+        bytes32 identificationNumber;
         bytes32 name;
     }
 
@@ -27,7 +27,7 @@ contract ScreeningList {
      * @param _identificationNumber Customer Identification Number
      * @param _name Customer Name
      */
-    function addBlackListedCustomer(address _accountAddress, bytes12 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
+    function addBlackListedCustomer(address _accountAddress, bytes32 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
         Customer memory customer;
         customer.identificationNumber = _identificationNumber;
         customer.name = _name;
@@ -52,7 +52,7 @@ contract ScreeningList {
     /**
      * @dev Retrieves a black listed company based on id
      */ 
-    function getBlackListedCustomers() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
+    function getBlackListedCustomers() external view returns (address[50] _addresses, bytes32[50] _identificationNumbers, bytes32[50] _names) {
         for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {            
             _addresses[index] = blackListedCustomerAddresses[index];
             _identificationNumbers[index] = customerMap[_addresses[index]].identificationNumber;
@@ -79,7 +79,7 @@ contract ScreeningList {
      * @param _identificationNumber Customer Identification Number
      * @param _name Customer Name
      */
-    function addWhiteListedCustomer(address _accountAddress, bytes12 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
+    function addWhiteListedCustomer(address _accountAddress, bytes32 _identificationNumber, bytes32 _name) onlyOwner(owner) external {
         Customer memory customer;
         customer.identificationNumber  = _identificationNumber;
         customer.name = _name;
@@ -104,7 +104,7 @@ contract ScreeningList {
     /**
      * @dev Retrieves a white listed company based on id
      */ 
-    function getWhiteListedCustomers() external view returns (address[50] _addresses, bytes12[50] _identificationNumbers, bytes32[50] _names) {
+    function getWhiteListedCustomers() external view returns (address[50] _addresses, bytes32[50] _identificationNumbers, bytes32[50] _names) {
         for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
             if(whiteListedCustomerAddresses[index] != 0x0) {
                 _addresses[index] = whiteListedCustomerAddresses[index];
@@ -133,7 +133,7 @@ contract ScreeningList {
      * @param _identificationNumbers identification numbers
      * @param _names Customer names
      */
-    function addBlackListedCustomersBatch(address[] _addresses, bytes12[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
+    function addBlackListedCustomersBatch(address[] _addresses, bytes32[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
         for(uint index = 0; index < _addresses.length; index++) {
             customerMap[_addresses[index]].identificationNumber = _identificationNumbers[index];
             customerMap[_addresses[index]].name = _names[index];
@@ -147,11 +147,25 @@ contract ScreeningList {
      * @param _identificationNumbers identification numbers
      * @param _names Customer names
      */
-    function addWhiteListedCustomersBatch(address[] _addresses, bytes12[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
+    function addWhiteListedCustomersBatch(address[] _addresses, bytes32[] _identificationNumbers, bytes32[] _names) onlyOwner(owner) external {
         for(uint index = 0; index < _addresses.length; index++) {
             customerMap[_addresses[index]].identificationNumber = _identificationNumbers[index];
             customerMap[_addresses[index]].name = _names[index];
             whiteListedCustomerAddresses.push(_addresses[index]);
         }
+    }
+
+    /**
+     * @dev List all white listed customers address
+     */
+    function getAllWhiteListedCustomerAddress() external view returns (address[]){
+        return whiteListedCustomerAddresses;
+    }
+    
+    /**
+     * @dev List all Black listed customers address
+     */
+    function getAllBlackListedCustomerAddress() external view returns (address[]){
+        return blackListedCustomerAddresses;
     }
 }

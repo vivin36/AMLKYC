@@ -37,7 +37,7 @@ public class ScreeninglistController {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ScreeninglistVO> getAllblackListCustomers() {
-		return screeninglistService.getAllblackListCustomers();
+		return screeninglistService.getAllblackListCustomersAddress();
 	}
 
 	@Path("/whitelists")
@@ -45,7 +45,7 @@ public class ScreeninglistController {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ScreeninglistVO> getAllwhiteListCustomers() {
-		return screeninglistService.getAllwhiteListCustomers();
+		return screeninglistService.getAllwhiteListCustomersAddress();
 	}
 
 	@Path("/whitelists")

@@ -13,6 +13,7 @@ import org.web3j.utils.Numeric;
 import com.blockchain.api.ScreeninglistController;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.contracts.Screeninglist;
+import com.blockchain.exception.ApplicationException;
 import com.blockchain.protocol.web3.ContractsDeployer;
 import com.blockchain.utils.Utils;
 import com.blockchain.vo.ScreeninglistVO;
@@ -32,8 +33,9 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			ScreeninglistContract.addBlackListedCustomer(screeninglistVO.getAccountAddress(),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getIdentificationNumber())), 
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
-		} catch (Exception e) {
+		} catch (Exception e) {			
 			e.printStackTrace();
+			throw new ApplicationException("Error in adding blacklisted customer");
 		}
 		return screeninglistVO;
 	}
@@ -49,6 +51,7 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ApplicationException("Error in adding whitelisted customer");
 		}
 		return screeninglistVO;
 	}
@@ -59,9 +62,9 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
 		try {
 			Tuple3<List<String>, List<byte[]>, List<byte[]>> whiteListedCustomers = ScreeninglistContract.getWhiteListedCustomers().send();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {		
 			e.printStackTrace();
+			throw new ApplicationException("Error in fetching whitelisted customer");
 		}
 		
 		return null;
@@ -70,6 +73,14 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public List<ScreeninglistVO> getAllblackListCustomers() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		try {
+			Tuple3<List<String>, List<byte[]>, List<byte[]>> blackListedCustomer  = ScreeninglistContract.getBlackListedCustomers().send();
+		} catch (Exception e) {		
+			e.printStackTrace();
+			throw new ApplicationException("Error in fetching blacklisted customer");
+		}
+		
 		return null;
 	}
 
@@ -82,6 +93,7 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			response = ScreeninglistContract.checkIsWhiteListed(accountAddress).send();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ApplicationException("Error in checking whitelisted customer");
 		}
 		return response;
 	}
@@ -95,6 +107,7 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			response = ScreeninglistContract.checkIsBlackListed(accountAddress).send();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ApplicationException("Error in checking blacklisted customer");
 		}
 		return response;
 	}
@@ -108,6 +121,7 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			 reponse = ScreeninglistContract.removeBlackListedCustomer(accountAddress).send();
 		} catch (Exception e) {			
 			e.printStackTrace();
+			throw new ApplicationException("Error in removing from blacklisted customer");
 		}
 		return reponse.getTransactionHash();
 	}
@@ -121,8 +135,38 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			 reponse = ScreeninglistContract.removeWhiteListedCustomer(accountAddress).send();
 		} catch (Exception e) {		
 			e.printStackTrace();
+			throw new ApplicationException("Error in removing from whitelisted customer");
 		}
 		
+	}
+
+
+	@Override
+	public List<ScreeninglistVO> getAllwhiteListCustomersAddress() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		List whiteListedCustomersAddress  = null;
+		  try {
+			 whiteListedCustomersAddress = ScreeninglistContract.getAllWhiteListedCustomerAddress().send();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return whiteListedCustomersAddress;
+	}
+
+
+	@Override
+	public List<ScreeninglistVO> getAllblackListCustomersAddress() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+	
+		  List blackListedCustomersAddress = null;
+		try {
+			  blackListedCustomersAddress  = ScreeninglistContract.getAllBlackListedCustomerAddress().send();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return blackListedCustomersAddress;
 	}
 
 }

@@ -140,4 +140,33 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		
 	}
 
+
+	@Override
+	public List<ScreeninglistVO> getAllwhiteListCustomersAddress() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		List whiteListedCustomersAddress  = null;
+		  try {
+			 whiteListedCustomersAddress = ScreeninglistContract.getAllWhiteListedCustomerAddress().send();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return whiteListedCustomersAddress;
+	}
+
+
+	@Override
+	public List<ScreeninglistVO> getAllblackListCustomersAddress() {
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+	
+		  List blackListedCustomersAddress = null;
+		try {
+			  blackListedCustomersAddress  = ScreeninglistContract.getAllBlackListedCustomerAddress().send();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return blackListedCustomersAddress;
+	}
+
 }

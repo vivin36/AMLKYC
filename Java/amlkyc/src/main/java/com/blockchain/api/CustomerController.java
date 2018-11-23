@@ -1,5 +1,7 @@
 package com.blockchain.api;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -41,5 +43,12 @@ public class CustomerController {
 	@Produces({MediaType.APPLICATION_JSON})
 	public CustomerVO getCustomerByAddress(@PathParam("address") String address) {
 		return customerService.getCustomerByAddress(address);
+	}
+	
+	@Path("/addresses")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<String> getAllCustomerAddresses() {
+		return customerService.getAllCustomerAddresses();
 	}
 }

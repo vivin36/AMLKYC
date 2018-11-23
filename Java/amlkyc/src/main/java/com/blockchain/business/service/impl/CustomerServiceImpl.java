@@ -1,6 +1,7 @@
 package com.blockchain.business.service.impl;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,11 +80,26 @@ public class CustomerServiceImpl implements ICustomerService {
 			customerVO.setCustomerType(String.valueOf(txnResponse.getValue3()));
 			customerVO.setIsParentCustomer(txnResponse.getValue4());
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in retrieving customer details!");
 		}
 		
 		return customerVO;
+	}
+
+	@Override
+	public List<String> getAllCustomerAddresses() {
+		
+		Customer customerContract = contractsDeployer.getCustomerContract();
+
+		List<String> addressResp = null;
+		
+		try {
+			addressResp = customerContract.getAllAddresses().send();
+		} catch (Exception e) {
+			throw new ApplicationException("Error in retrieving addresses of all users");
+		}
+		
+		return addressResp;
 	}	
 
 }

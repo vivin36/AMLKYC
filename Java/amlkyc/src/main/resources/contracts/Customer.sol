@@ -111,4 +111,11 @@ contract Customer {
             emit CustomerCreated(_addresses[index],_accounts[index],_names[index]);
         }
     }
-}
+    
+    /**
+     @dev Returns the ethreum wallet address of all customers
+     */
+    function getAllAddresses() view external returns(address[]) {
+        return addressesList;
+    }
+ }

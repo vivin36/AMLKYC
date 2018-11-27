@@ -173,7 +173,7 @@ contract ScreeningList {
      * @dev List all the blacklisted Customer Names 
      */
     function getAllBlackListedCustomerNames() external view returns (bytes32[50] _name){
-          for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
             _name[index] =  customerMap[blackListedCustomerAddresses[index]].name;
         }
     }
@@ -181,8 +181,24 @@ contract ScreeningList {
       * @dev List all the blacklisted Customer Identification Number 
       */
     function getAllBlackListedCustomerIdentificationNumber() external view returns (bytes32[50] _identificationNumber){
-          for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
+        for(uint index = 0; index < blackListedCustomerAddresses.length; index++) {
             _identificationNumber[index] = customerMap[blackListedCustomerAddresses[index]].identificationNumber;
+        }
+    }
+    /**
+     * @dev List all the whiteListed Customer Names    
+     */
+    function getAllWhiteListedCustomerNames() external view returns (bytes32[50] _name){
+        for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+            _name[index] =  customerMap[whiteListedCustomerAddresses[index]].name;
+        }
+    }
+    /**
+     * @dev List all the whiteListed Identification Number    
+     */
+    function getAllWhiteListedCustomerIdentificationNumber() external view returns (bytes32[50] _identificationNumber){
+        for(uint index = 0; index < whiteListedCustomerAddresses.length; index++) {
+            _identificationNumber[index] = customerMap[whiteListedCustomerAddresses[index]].identificationNumber;
         }
     }
 

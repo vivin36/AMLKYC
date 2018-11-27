@@ -12,6 +12,5 @@ public interface ICustomerService {
 
 	public CustomerVO getCustomerByAddress(String address);
 
-	public List<String> getAllCustomerAddresses();
-	
+	public List<CustomerVO> getAllCustomerDetails();
 }

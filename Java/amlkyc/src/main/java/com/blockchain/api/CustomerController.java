@@ -45,10 +45,9 @@ public class CustomerController {
 		return customerService.getCustomerByAddress(address);
 	}
 	
-	@Path("/addresses")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<String> getAllCustomerAddresses() {
-		return customerService.getAllCustomerAddresses();
+	public List<CustomerVO> getAllCustomerDetails() {
+		return customerService.getAllCustomerDetails();
 	}
 }

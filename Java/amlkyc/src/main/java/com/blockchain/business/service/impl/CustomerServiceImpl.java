@@ -1,10 +1,18 @@
 package com.blockchain.business.service.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.StaticArray;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Wallet;
@@ -12,6 +20,7 @@ import org.web3j.crypto.WalletFile;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.utils.Numeric;
 
+import com.blockchain.adapter.EthResponseAdapter;
 import com.blockchain.business.service.ICustomerService;
 import com.blockchain.contracts.Customer;
 import com.blockchain.exception.ApplicationException;
@@ -24,6 +33,9 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Autowired
 	private ContractsDeployer contractsDeployer;
+	
+	@Autowired
+	private EthResponseAdapter ethResponseAdapter;
 
 	@Override
 	public CustomerVO createCustomer(CustomerVO customerVO) {
@@ -87,19 +99,37 @@ public class CustomerServiceImpl implements ICustomerService {
 	}
 
 	@Override
-	public List<String> getAllCustomerAddresses() {
+	public List<CustomerVO> getAllCustomerDetails() {
 		
-		Customer customerContract = contractsDeployer.getCustomerContract();
-
-		List<String> addressResp = null;
+		final Function function = new Function("getAllCustomerNames", 
+                Arrays.<Type>asList(), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {}));
+		
+		List<CustomerVO> customerDetailsList = new ArrayList<>();
+		List<String> customerNames = null, addresses = null;
+		
+		CustomerVO customerVO = null;
 		
 		try {
-			addressResp = customerContract.getAllAddresses().send();
+			Customer customerContract = contractsDeployer.getCustomerContract();
+			String encodedFunction = FunctionEncoder.encode(function);
+			String value = ethResponseAdapter.getEthResponse(customerContract, encodedFunction);
+			customerNames = Utils.hexToASCIIElem(value);
+			addresses = customerContract.getAllAddresses().send();
+			
+			for(int index = 0; index < addresses.size(); index++) {
+				customerVO = new CustomerVO();
+				customerVO.setAddress(addresses.get(index));
+				customerVO.setName(customerNames.get(index));
+				customerDetailsList.add(customerVO);
+				customerVO = null;
+			}
 		} catch (Exception e) {
-			throw new ApplicationException("Error in retrieving addresses of all users");
+			e.printStackTrace();
+			throw new ApplicationException("Error in retrieving details of all customers");
 		}
 		
-		return addressResp;
+		return customerDetailsList;
 	}	
 
 }

@@ -101,31 +101,42 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Override
 	public List<CustomerVO> getAllCustomerDetails() {
 		
-		final Function function = new Function("getAllCustomerNames", 
+		final Function getAllCustNamesFunc = new Function("getAllCustomerNames", 
+                Arrays.<Type>asList(), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {}));
+		
+		final Function getAllCustAccountsFunc = new Function("getAllCustomerAccounts", 
                 Arrays.<Type>asList(), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {}));
 		
 		List<CustomerVO> customerDetailsList = new ArrayList<>();
-		List<String> customerNames = null, addresses = null;
+		List<String> addresses = null, customerAccounts = null, customerNames = null;
 		
 		CustomerVO customerVO = null;
 		
-		try {
-			Customer customerContract = contractsDeployer.getCustomerContract();
-			String encodedFunction = FunctionEncoder.encode(function);
-			String value = ethResponseAdapter.getEthResponse(customerContract, encodedFunction);
-			customerNames = Utils.hexToASCIIElem(value);
+		String hexValueResp = null;
+		
+		String encodedGetAllCustNamesFunc = FunctionEncoder.encode(getAllCustNamesFunc);
+		String encodedGetAllCustAccountsFunc = FunctionEncoder.encode(getAllCustAccountsFunc);
+		
+		Customer customerContract = contractsDeployer.getCustomerContract();
+		
+		try {			
 			addresses = customerContract.getAllAddresses().send();
+			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, encodedGetAllCustAccountsFunc);
+			customerAccounts = Utils.hexToASCIIElem(hexValueResp);
+			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, encodedGetAllCustNamesFunc);
+			customerNames = Utils.hexToASCIIElem(hexValueResp);
 			
 			for(int index = 0; index < addresses.size(); index++) {
 				customerVO = new CustomerVO();
 				customerVO.setAddress(addresses.get(index));
 				customerVO.setName(customerNames.get(index));
+				customerVO.setAccount(customerAccounts.get(index));
 				customerDetailsList.add(customerVO);
 				customerVO = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in retrieving details of all customers");
 		}
 		

@@ -118,4 +118,24 @@ contract Customer {
     function getAllAddresses() view external returns(address[]) {
         return addressesList;
     }
+    
+    /**
+     @dev Returns the names of all customers
+     */
+    function getAllCustomerNames() view external returns(bytes32[50] names) {
+        for(uint index = 0; index < addressesList.length; index++) {
+            names[index] = customerDetailsMap[addressesList[index]].name;
+        }
+        return names;
+    }
+    
+    /**
+     @dev Returns the account names of all customers
+     */
+    function getAllCustomerAccounts() view external returns(bytes32[50] accounts) {
+        for(uint index = 0; index < addressesList.length; index++) {
+            accounts[index] = customerDetailsMap[addressesList[index]].account;
+        }
+        return accounts;
+    }
  }

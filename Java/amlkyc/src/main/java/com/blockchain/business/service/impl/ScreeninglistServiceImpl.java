@@ -170,8 +170,8 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			encodedFunction = FunctionEncoder.encode(getWhiteListedCustID);
 			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
 
-			whiteListedCustNames = Utils.hexToASCIIElem(value);
-			whiteListedIDs = Utils.hexToASCIIElem(customersIDList);
+			whiteListedCustNames = Utils.hexToASCIIElems(value);
+			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
 			addresses = screeninglistContract.getAllWhiteListedCustomerAddress().send();
 			for (int index = 0; index < addresses.size(); index++) {
 				screeninglistVO = new ScreeninglistVO();
@@ -213,8 +213,8 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			encodedFunction = FunctionEncoder.encode(getBlackListedCustID);
 			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
 
-			blackListedCustNames = Utils.hexToASCIIElem(value);
-			whiteListedIDs = Utils.hexToASCIIElem(customersIDList);
+			blackListedCustNames = Utils.hexToASCIIElems(value);
+			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
 			addresses = screeninglistContract.getAllBlackListedCustomerAddress().send();
 			for (int index = 0; index < addresses.size(); index++) {
 				screeninglistVO = new ScreeninglistVO();

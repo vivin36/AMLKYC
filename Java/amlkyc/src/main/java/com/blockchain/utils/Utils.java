@@ -30,7 +30,7 @@ public class Utils {
         return output.toString().replaceAll("\\u0000", "");
     }
 	
-	public static List<String> hexToASCIIElem(String rawHex) {
+	public static List<String> hexToASCIIElems(String rawHex) {
 		
 		List<String> elems = new ArrayList<>();
 		

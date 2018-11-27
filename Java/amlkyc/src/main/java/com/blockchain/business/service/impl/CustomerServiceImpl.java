@@ -2,17 +2,10 @@ package com.blockchain.business.service.impl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.StaticArray;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Wallet;
@@ -101,14 +94,6 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Override
 	public List<CustomerVO> getAllCustomerDetails() {
 		
-		final Function getAllCustNamesFunc = new Function("getAllCustomerNames", 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {}));
-		
-		final Function getAllCustAccountsFunc = new Function("getAllCustomerAccounts", 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {}));
-		
 		List<CustomerVO> customerDetailsList = new ArrayList<>();
 		List<String> addresses = null, customerAccounts = null, customerNames = null;
 		
@@ -116,17 +101,14 @@ public class CustomerServiceImpl implements ICustomerService {
 		
 		String hexValueResp = null;
 		
-		String encodedGetAllCustNamesFunc = FunctionEncoder.encode(getAllCustNamesFunc);
-		String encodedGetAllCustAccountsFunc = FunctionEncoder.encode(getAllCustAccountsFunc);
-		
 		Customer customerContract = contractsDeployer.getCustomerContract();
 		
 		try {			
 			addresses = customerContract.getAllAddresses().send();
-			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, encodedGetAllCustAccountsFunc);
-			customerAccounts = Utils.hexToASCIIElem(hexValueResp);
-			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, encodedGetAllCustNamesFunc);
-			customerNames = Utils.hexToASCIIElem(hexValueResp);
+			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, Customer.FUNC_GETALLCUSTOMERACCOUNTS);
+			customerAccounts = Utils.hexToASCIIElems(hexValueResp);
+			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, Customer.FUNC_GETALLCUSTOMERNAMES);
+			customerNames = Utils.hexToASCIIElems(hexValueResp);
 			
 			for(int index = 0; index < addresses.size(); index++) {
 				customerVO = new CustomerVO();

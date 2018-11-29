@@ -1,6 +1,5 @@
 package com.blockchain.business.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,19 +12,16 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Bytes32;
-import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tuples.generated.Tuple3;
 import org.web3j.utils.Numeric;
 
 import com.blockchain.adapter.EthResponseAdapter;
-import com.blockchain.api.ScreeninglistController;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.contracts.Screeninglist;
 import com.blockchain.exception.ApplicationException;
 import com.blockchain.protocol.web3.ContractsDeployer;
 import com.blockchain.utils.Utils;
-import com.blockchain.vo.CustomerVO;
 import com.blockchain.vo.ScreeninglistVO;
 
 @Service
@@ -46,7 +42,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getIdentificationNumber())),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in adding blacklisted customer");
 		}
 		return screeninglistVO;
@@ -61,7 +56,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getIdentificationNumber())),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in adding whitelisted customer");
 		}
 		return screeninglistVO;
@@ -69,30 +63,65 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public List<ScreeninglistVO> getAllwhiteListCustomers() {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
-		try {
-			Tuple3<List<String>, List<byte[]>, List<byte[]>> whiteListedCustomers = ScreeninglistContract
-					.getWhiteListedCustomers().send();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ApplicationException("Error in fetching whitelisted customer");
-		}
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
+		List<ScreeninglistVO> whiteListedCustomersList = new ArrayList<>();
+		List<String> whiteListedCustNames = null, addresses = null, whiteListedIDs;
+		ScreeninglistVO screeninglistVO = null;
 
-		return null;
+		try {
+			String value = ethResponseAdapter.getEthResponse(screeninglistContract,
+					Screeninglist.FUNC_GETALLWHITELISTEDCUSTOMERNAMES);
+
+			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract,
+					Screeninglist.FUNC_GETALLWHITELISTEDCUSTOMERIDENTIFICATIONNUMBER);
+
+			whiteListedCustNames = Utils.hexToASCIIElems(value);
+			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
+			addresses = screeninglistContract.getAllWhiteListedCustomerAddress().send();
+			for (int index = 0; index < addresses.size(); index++) {
+				screeninglistVO = new ScreeninglistVO();
+				screeninglistVO.setAccountAddress(addresses.get(index));
+				screeninglistVO.setName(whiteListedCustNames.get(index));
+				screeninglistVO.setIdentificationNumber(whiteListedIDs.get(index));
+				whiteListedCustomersList.add(screeninglistVO);
+				screeninglistVO = null;
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("Error in retrieving  WhiteListed customer");
+		}
+		return whiteListedCustomersList;
 	}
 
 	@Override
 	public List<ScreeninglistVO> getAllblackListCustomers() {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
-		try {
-			Tuple3<List<String>, List<byte[]>, List<byte[]>> blackListedCustomer = ScreeninglistContract
-					.getBlackListedCustomers().send();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ApplicationException("Error in fetching blacklisted customer");
-		}
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 
-		return null;
+		List<ScreeninglistVO> blackListedCustomersList = new ArrayList<>();
+		List<String> blackListedCustNames = null, addresses = null, blackListedIDs = null;
+		ScreeninglistVO screeninglistVO = null;
+		try {
+
+			String value = ethResponseAdapter.getEthResponse(screeninglistContract,
+					Screeninglist.FUNC_GETALLBLACKLISTEDCUSTOMERNAMES);
+
+			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract,
+					Screeninglist.FUNC_GETALLBLACKLISTEDCUSTOMERIDENTIFICATIONNUMBER);
+
+			blackListedCustNames = Utils.hexToASCIIElems(value);
+			blackListedIDs = Utils.hexToASCIIElems(customersIDList);
+			addresses = screeninglistContract.getAllBlackListedCustomerAddress().send();
+			for (int index = 0; index < blackListedCustNames.size(); index++) {
+				screeninglistVO = new ScreeninglistVO();
+				screeninglistVO.setAccountAddress(addresses.get(index));
+				screeninglistVO.setName(blackListedCustNames.get(index));
+				screeninglistVO.setIdentificationNumber(blackListedIDs.get(index));
+				blackListedCustomersList.add(screeninglistVO);
+				screeninglistVO = null;
+			}
+		} catch (Exception e) {
+			throw new ApplicationException("Error in retrieving  blacklisted customer");
+		}
+		return blackListedCustomersList;
 	}
 
 	@Override
@@ -102,7 +131,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		try {
 			response = ScreeninglistContract.checkIsWhiteListed(accountAddress).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in checking whitelisted customer");
 		}
 		return response;
@@ -115,7 +143,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		try {
 			response = ScreeninglistContract.checkIsBlackListed(accountAddress).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in checking blacklisted customer");
 		}
 		return response;
@@ -141,7 +168,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		try {
 			reponse = screeninglistContract.removeWhiteListedCustomer(accountAddress).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in removing from whitelisted customer");
 		}
 
@@ -149,89 +175,28 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public List<ScreeninglistVO> getAllwhiteListCustomersAddress() {
-		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 
-		final Function getWhitelistedCustNames = new Function("getAllWhiteListedCustomerNames", Arrays.<Type>asList(),
-				Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {
-				}));
-
-		final Function getWhiteListedCustID = new Function("getAllWhiteListedCustomerIdentificationNumber",
-				Arrays.<Type>asList(), Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {
-				}));
-
-		List<ScreeninglistVO> customerDetailsList = new ArrayList<>();
-		List<String> whiteListedCustNames = null, addresses = null, whiteListedIDs;
-		ScreeninglistVO screeninglistVO = null;
-
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		List whiteListedCustomersAddress = null;
 		try {
-			String encodedFunction = FunctionEncoder.encode(getWhitelistedCustNames);
-			String value = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
-
-			encodedFunction = FunctionEncoder.encode(getWhiteListedCustID);
-			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
-
-			whiteListedCustNames = Utils.hexToASCIIElems(value);
-			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
-			addresses = screeninglistContract.getAllWhiteListedCustomerAddress().send();
-			for (int index = 0; index < addresses.size(); index++) {
-				screeninglistVO = new ScreeninglistVO();
-				screeninglistVO.setAccountAddress(addresses.get(index));
-				screeninglistVO.setName(whiteListedCustNames.get(index));
-				screeninglistVO.setIdentificationNumber(whiteListedIDs.get(index));
-				customerDetailsList.add(screeninglistVO);
-				screeninglistVO = null;
-			}
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			throw new ApplicationException("Error in retrieving  WhiteListed customer");
+			whiteListedCustomersAddress = ScreeninglistContract.getAllWhiteListedCustomerAddress().send();
+		} catch (Exception e) {
+			throw new ApplicationException("Error in retrieving from whitelisted customer address");
 		}
-
-		return customerDetailsList;
+		return whiteListedCustomersAddress;
 	}
 
 	@Override
 	public List<ScreeninglistVO> getAllblackListCustomersAddress() {
-		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
 
-		final Function getBlacklistedCustNames = new Function("getAllBlackListedCustomerNames", Arrays.<Type>asList(),
-				Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {
-				}));
-
-		final Function getBlackListedCustID = new Function("getAllBlackListedCustomerIdentificationNumber",
-				Arrays.<Type>asList(), Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray<Bytes32>>() {
-				}));
-
-		List<ScreeninglistVO> blackListedCustomersList = new ArrayList<>();
-		List<String> blackListedCustNames = null, addresses = null, whiteListedIDs;
-		ScreeninglistVO screeninglistVO = null;
-
+		List blackListedCustomersAddress = null;
 		try {
-			String encodedFunction = FunctionEncoder.encode(getBlacklistedCustNames);
-			String value = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
-
-			encodedFunction = FunctionEncoder.encode(getBlackListedCustID);
-			String customersIDList = ethResponseAdapter.getEthResponse(screeninglistContract, encodedFunction);
-
-			blackListedCustNames = Utils.hexToASCIIElems(value);
-			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
-			addresses = screeninglistContract.getAllBlackListedCustomerAddress().send();
-			for (int index = 0; index < addresses.size(); index++) {
-				screeninglistVO = new ScreeninglistVO();
-				screeninglistVO.setAccountAddress(addresses.get(index));
-				screeninglistVO.setName(blackListedCustNames.get(index));
-				screeninglistVO.setIdentificationNumber(whiteListedIDs.get(index));
-				blackListedCustomersList.add(screeninglistVO);
-				screeninglistVO = null;
-			}
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			throw new ApplicationException("Error in retrieving  blacklisted customer");
+			blackListedCustomersAddress = ScreeninglistContract.getAllBlackListedCustomerAddress().send();
+		} catch (Exception e) {
+			throw new ApplicationException("Error in retrieving from blacklisted customer address");
 		}
-
-		return blackListedCustomersList;
-
+		return blackListedCustomersAddress;
 	}
 
 }

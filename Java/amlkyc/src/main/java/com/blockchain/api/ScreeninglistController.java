@@ -31,21 +31,38 @@ public class ScreeninglistController {
 	public ScreeninglistVO addtoBlackListCustomer(ScreeninglistVO screeninglistVO) {
 		return screeninglistService.addToBlackListedCustomer(screeninglistVO);
 	}
+	
+	@Path("/blacklists/address")
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ScreeninglistVO> getAllblackListCustomersAddress() {
+		return screeninglistService.getAllblackListCustomersAddress();
+	}
 
+	
 	@Path("/blacklists")
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ScreeninglistVO> getAllblackListCustomers() {
-		return screeninglistService.getAllblackListCustomersAddress();
+		return screeninglistService.getAllblackListCustomers();
 	}
 
+	@Path("/whitelists/address")
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<ScreeninglistVO> getAllwhiteListCustomersAddress() {
+		return screeninglistService.getAllwhiteListCustomersAddress();
+	}
+	
 	@Path("/whitelists")
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<ScreeninglistVO> getAllwhiteListCustomers() {
-		return screeninglistService.getAllwhiteListCustomersAddress();
+		return screeninglistService.getAllwhiteListCustomers();
 	}
 
 	@Path("/whitelists")

@@ -17,7 +17,7 @@ public class GenericDAOImpl<T, PK extends Serializable> implements IGenericDAO<T
     
     public void setType( Class<T> type) {
         this.type = type;
-     }
+    }
 
 	@Override
 	public T create(T entity) {
@@ -45,6 +45,4 @@ public class GenericDAOImpl<T, PK extends Serializable> implements IGenericDAO<T
 	public void delete(PK id) {
 		em.remove(em.getReference(type, id));		
 	}
-	
-
 }

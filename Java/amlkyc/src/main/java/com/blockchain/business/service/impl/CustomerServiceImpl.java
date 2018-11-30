@@ -103,7 +103,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		
 		Customer customerContract = contractsDeployer.getCustomerContract();
 		
-		try {			
+		try {
 			addresses = customerContract.getAllAddresses().send();
 			hexValueResp = ethResponseAdapter.getEthResponse(customerContract, Customer.FUNC_GETALLCUSTOMERACCOUNTS);
 			customerAccounts = Utils.hexToASCIIElems(hexValueResp);

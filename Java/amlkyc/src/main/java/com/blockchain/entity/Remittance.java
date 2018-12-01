@@ -16,15 +16,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="remittances")
-public class Remittance extends BaseObject implements Serializable {
+public class Remittance extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
 	private String comments;
-	
 	private String description;
-	
 	private String receiverAccountNumber;
 	private String senderAccountNumber;
 	private String status;

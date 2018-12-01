@@ -1,15 +1,20 @@
 package com.blockchain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-public class BaseObject {
+@MappedSuperclass
+public class BaseEntity implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String crtBy;
 	private Date crtsTs;
 	private String modBy;
@@ -30,7 +35,6 @@ public class BaseObject {
 		return this.crtsTs;
 	}
 
-	@PrePersist
 	public void setCrtsTs(Date crtsTs) {
 		this.crtsTs = crtsTs;
 	}
@@ -50,8 +54,17 @@ public class BaseObject {
 		return this.modTs;
 	}
 
-	@PreUpdate
 	public void setModTs(Date modTs) {
 		this.modTs = modTs;
+	}
+	
+	@PrePersist
+	public void setCreatedTs() {
+		setCrtsTs(new Date());
+	}
+	
+	@PreUpdate
+	public void setModfiedTs() {
+		setModTs(new Date());
 	}
 }

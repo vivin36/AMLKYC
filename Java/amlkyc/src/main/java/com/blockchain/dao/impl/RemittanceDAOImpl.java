@@ -29,7 +29,7 @@ public class RemittanceDAOImpl extends GenericDAOImpl<Remittance, Long> implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Remittance> getAllRemittancesByStatus(String status) {
-		Query query = em.createQuery("SELECT r FROM Remittance r WHERE r.status = :status ");
+		Query query = em.createQuery("FROM Remittance r WHERE r.status = :status");
 		query.setParameter("status", status);
 		
 		return query.getResultList();

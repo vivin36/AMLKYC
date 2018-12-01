@@ -22,7 +22,7 @@ public class RemittancesScheduler {
 	private IRemittanceService remittanceService;
 	
 	@Scheduled(cron = "0/30 * * * * ?")
-	public void remittance() {
+	public synchronized void remittance() {
 		
 		List<Remittance> pendingRemittances = remittanceService.getAllRemittancesByStatus(Status.PENDING.getCode());
 		

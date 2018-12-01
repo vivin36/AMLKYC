@@ -2,8 +2,9 @@ package com.blockchain.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-public interface IGenericDAO<T, PK extends Serializable> {
+public interface IGenericDAO<T extends Serializable, PK extends Serializable> {
 	
 	public T create(T entity);
 	
@@ -13,5 +14,9 @@ public interface IGenericDAO<T, PK extends Serializable> {
 	
 	public List<T> findAll();
 	
-	public void delete(PK id);
+	public void delete(T entity);
+	
+	public T queryForObject(String queryIdentifier, Map<String, ? extends Serializable> parameterMap);
+	
+	public List<T> queryForList(String queryIdentifier, Map<String, ? extends Serializable> parameterMap);
 }

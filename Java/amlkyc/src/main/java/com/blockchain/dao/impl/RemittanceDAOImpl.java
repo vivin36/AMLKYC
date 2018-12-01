@@ -1,6 +1,8 @@
 package com.blockchain.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -12,10 +14,6 @@ import com.blockchain.entity.Remittance;
 @Repository
 public class RemittanceDAOImpl extends GenericDAOImpl<Remittance, Long> implements IRemittanceDAO {
 
-	public RemittanceDAOImpl() {
-		setType(Remittance.class);
-	}
-	
 	@Override
 	public Remittance saveRemittance(Remittance remittance) {
 		return create(remittance);
@@ -26,12 +24,11 @@ public class RemittanceDAOImpl extends GenericDAOImpl<Remittance, Long> implemen
 		return update(remittance);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Remittance> getAllRemittancesByStatus(String status) {
-		Query query = em.createQuery("FROM Remittance r WHERE r.status = :status");
-		query.setParameter("status", status);
+		final Map<String, String> parameterMap = new HashMap<>();
+		parameterMap.put("status", status);
 		
-		return query.getResultList();
+		return queryForList("remittance.getAllRemittancesByStatus", parameterMap);
 	}
 }

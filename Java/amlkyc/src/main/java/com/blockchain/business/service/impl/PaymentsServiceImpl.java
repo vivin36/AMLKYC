@@ -69,4 +69,10 @@ public class PaymentsServiceImpl implements IPaymentsService {
 	public Remittance updateRemittance(Remittance remittance) {
 		return paymentsDAO.update(remittance);
 	}
+
+	@Override
+	public WrappedResponseVO inputPayments(WrappedRequestVO request) {
+	
+		return null;
+	}
 }

@@ -19,6 +19,14 @@ public class PaymentsController {
 	
 	@Autowired
 	private IPaymentsService paymentsService;
+	
+	@Path("credit")
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public WrappedResponseVO inputPayments(WrappedRequestVO request) {
+		return paymentsService.inputPayments(request);
+	}
 
 	@Path("transfer")
 	@POST

@@ -17,6 +17,8 @@ import com.blockchain.vo.ResponseVO;
 import com.blockchain.vo.ResultInfoVO;
 import com.blockchain.vo.WrappedRequestVO;
 import com.blockchain.vo.WrappedResponseVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PaymentsServiceImpl implements IPaymentsService {
@@ -68,5 +70,30 @@ public class PaymentsServiceImpl implements IPaymentsService {
 	@Override
 	public Remittance updateRemittance(Remittance remittance) {
 		return paymentsDAO.update(remittance);
+	}
+
+	@Override
+	public WrappedResponseVO reduceAmount(WrappedRequestVO wrappedRequestVO) {
+		
+		WrappedResponseVO wrappedResponseVO = new WrappedResponseVO();
+		ResponseVO responseVO = new ResponseVO();
+		ResponseHeadVO responseHeadVO = new ResponseHeadVO();
+		responseHeadVO.setVersion("3.0.1");
+		responseHeadVO.setDescription("Received the request");
+		responseHeadVO.setClientId("4H00000010000002");
+		responseHeadVO.setResponseTime(LocalDate.now().toString());
+		responseHeadVO.setRequestMsgId(wrappedRequestVO.getRequest().getHead().getRequestMsgId());
+		ResponseBodyVO responseBodyVO = new ResponseBodyVO();
+		ResultInfoVO resultInfoVO = new ResultInfoVO();
+		resultInfoVO.setResultStatus(Status.RECEIVED.getCode());
+		resultInfoVO.setResultCodeId("0000000000");
+		resultInfoVO.setResultDescription(Status.RECEIVED.toString());
+		resultInfoVO.setResultComments("Received");
+		responseBodyVO.setResultInfo(resultInfoVO);
+		responseVO.setHead(responseHeadVO);
+		responseVO.setBody(responseBodyVO);
+		wrappedResponseVO.setResponse(responseVO);
+		
+		return wrappedResponseVO;
 	}
 }

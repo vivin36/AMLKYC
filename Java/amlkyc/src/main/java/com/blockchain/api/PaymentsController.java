@@ -28,4 +28,11 @@ public class PaymentsController {
 		return paymentsService.createRemittance(request);
 	}
 	
+	@Path("redeem")
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public WrappedResponseVO reduceAmount(WrappedRequestVO request) {
+		return paymentsService.reduceAmount(request);
+	}
 }

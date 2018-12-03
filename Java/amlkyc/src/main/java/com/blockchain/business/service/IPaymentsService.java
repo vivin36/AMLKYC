@@ -13,4 +13,6 @@ public interface IPaymentsService {
 	public List<Remittance> getAllRemittancesByStatus(String status);
 	
 	public Remittance updateRemittance(Remittance remittance);
+
+	public WrappedResponseVO reduceAmount(WrappedRequestVO request);
 }

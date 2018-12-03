@@ -13,7 +13,7 @@ import com.blockchain.entity.Remittance;
 import com.blockchain.enums.Status;
 
 @Component
-public class RemittancesScheduler {
+public class PaymentsScheduler {
 	
 	@Autowired
 	private IScreeninglistService screeninglistService;

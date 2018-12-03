@@ -18,26 +18,39 @@ USE `amlkyc`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `remittances`
+-- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `remittances`;
+DROP TABLE IF EXISTS `payments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `remittances` (
+CREATE TABLE `payments` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `DESCRIPTION` varchar(200) NOT NULL,
-  `SENDER_ACCOUNT_NUMBER` varchar(45) NOT NULL,
-  `RECEIVER_ACCOUNT_NUMBER` varchar(45) NOT NULL,
+  `TYPE` varchar(3) DEFAULT NULL,
+  `CURRENCY` varchar(5) NOT NULL,
+  `AMOUNT` int(11) NOT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
   `STATUS` varchar(5) NOT NULL,
   `COMMENTS` varchar(120) DEFAULT NULL,
+  `SENDER_ACCOUNT_NUMBER` varchar(45) DEFAULT NULL,
+  `SENDER_ACCOUNT_ID` varchar(45) DEFAULT NULL,
+  `RECEIVER_ACCOUNT_NUMBER` varchar(45) DEFAULT NULL,
+  `RECEIVER_ACCOUNT_ID` varchar(45) DEFAULT NULL,
+  `ACCOUNT_NUMBER` varchar(45) DEFAULT NULL,
+  `ACCOUNT_ID` varchar(45) DEFAULT NULL,
+  `INPUT_REF_NUMBER` varchar(45) DEFAULT NULL,
+  `REDEEM_REF_NUMBER` varchar(45) DEFAULT NULL,
   `CRTS_TS` datetime DEFAULT NULL,
   `CRT_BY` varchar(45) DEFAULT NULL,
   `MOD_TS` datetime DEFAULT NULL,
   `MOD_BY` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'amlkyc'
+--
 
 --
 -- Dumping routines for database 'amlkyc'
@@ -52,4 +65,4 @@ CREATE TABLE `remittances` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-30 17:08:49
+-- Dump completed on 2018-12-04  2:07:29

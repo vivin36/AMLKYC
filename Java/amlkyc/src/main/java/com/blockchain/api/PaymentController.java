@@ -9,31 +9,31 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.blockchain.business.service.IPaymentsService;
+import com.blockchain.business.service.IPaymentService;
 import com.blockchain.vo.WrappedRequestVO;
 import com.blockchain.vo.WrappedResponseVO;
 
 @Component
 @Path("payments")
-public class PaymentsController {
+public class PaymentController {
 	
 	@Autowired
-	private IPaymentsService paymentsService;
+	private IPaymentService paymentService;
 	
 	@Path("credit")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public WrappedResponseVO inputPayments(WrappedRequestVO request) {
-		return paymentsService.inputPayments(request);
+		return paymentService.inputPayments(request);
 	}
 
 	@Path("transfer")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public WrappedResponseVO createRemittance(WrappedRequestVO request) {
-		return paymentsService.createRemittance(request);
+	public WrappedResponseVO createTransferAmount(WrappedRequestVO request) {
+		return paymentService.createTransferAmount(request);
 	}
 	
 	@Path("redeem")
@@ -41,6 +41,6 @@ public class PaymentsController {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public WrappedResponseVO reduceAmount(WrappedRequestVO request) {
-		return paymentsService.reduceAmount(request);
+		return paymentService.reduceAmount(request);
 	}
 }

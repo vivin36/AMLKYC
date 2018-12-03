@@ -13,10 +13,10 @@
 		class="com.blockchain.entity.BaseEntity">
 	</mapped-superclass>
 
-	<entity class="com.blockchain.entity.Remittance">
-		<named-query name="remittance.getAllRemittancesByStatus">
+	<entity class="com.blockchain.entity.TransferAmount">
+		<named-query name="payment.getAllTransfersByStatus">
 			<query>
-				FROM Remittance r WHERE r.status=:status
+				FROM TransferAmount t WHERE t.status=:status
             </query>
 		</named-query>
 	</entity>

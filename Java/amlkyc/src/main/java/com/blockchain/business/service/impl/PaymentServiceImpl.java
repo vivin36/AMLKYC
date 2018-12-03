@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.blockchain.business.service.IPaymentsService;
-import com.blockchain.dao.IPaymentsDAO;
-import com.blockchain.entity.Remittance;
+import com.blockchain.business.service.IPaymentService;
+import com.blockchain.dao.IPaymentDAO;
+import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 import com.blockchain.exception.ApplicationException;
 import com.blockchain.vo.ResponseBodyVO;
@@ -20,39 +20,43 @@ import com.blockchain.vo.WrappedRequestVO;
 import com.blockchain.vo.WrappedResponseVO;
 
 @Service
-public class PaymentsServiceImpl implements IPaymentsService {
+public class PaymentServiceImpl implements IPaymentService {
 
 	@Autowired
-	private IPaymentsDAO paymentsDAO;
+	private IPaymentDAO paymentsDAO;
 	
 	@Transactional
 	@Override
-	public WrappedResponseVO createRemittance(WrappedRequestVO wrappedRequestVO) {
+	public WrappedResponseVO createTransferAmount(WrappedRequestVO wrappedRequestVO) {
 		
 		if(!isValidSignature(wrappedRequestVO.getSignature())) {
 			throw new ApplicationException("Invalid signature received!");
 		}
 		
-		Remittance remittance = new Remittance();
+		TransferAmount transferAmount = new TransferAmount();
 		
-		remittance.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
-		remittance.setSenderAccountNumber(wrappedRequestVO.getRequest().getBody().getSenderAccountNumber());
-		remittance.setReceiverAccountNumber(wrappedRequestVO.getRequest().getBody().getReceiverAccountNumber());
-		remittance.setStatus(Status.PENDING.getCode());
-		paymentsDAO.create(remittance);
+		transferAmount.setCurrency(wrappedRequestVO.getRequest().getBody().getAmount().getCurrency());
+		transferAmount.setAmount(Integer.parseInt(wrappedRequestVO.getRequest().getBody().getAmount().getValue()));
+		transferAmount.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
+		transferAmount.setSenderAccountNumber(wrappedRequestVO.getRequest().getBody().getSenderAccountNumber());
+		transferAmount.setSenderAccountId(wrappedRequestVO.getRequest().getBody().getSenderAccountId());
+		transferAmount.setReceiverAccountNumber(wrappedRequestVO.getRequest().getBody().getReceiverAccountNumber());
+		transferAmount.setReceiverAccountId(wrappedRequestVO.getRequest().getBody().getReceiverAccountId());
+		transferAmount.setStatus(Status.PENDING.getCode());
+		paymentsDAO.create(transferAmount);
 		
 		return generateResponse(wrappedRequestVO);
 	}
 
 	@Override
-	public List<Remittance> getAllRemittancesByStatus(String status) {
-		return paymentsDAO.getAllRemittancesByStatus(status);
+	public List<TransferAmount> getAllTransferAmountByStatus(String status) {
+		return paymentsDAO.getAllTransferAmountByStatus(status);
 	}
 
 	@Transactional
 	@Override
-	public Remittance updateRemittance(Remittance remittance) {
-		return paymentsDAO.update(remittance);
+	public TransferAmount updateTransferAmount(TransferAmount transferAmount) {
+		return paymentsDAO.update(transferAmount);
 	}
 
 	@Override

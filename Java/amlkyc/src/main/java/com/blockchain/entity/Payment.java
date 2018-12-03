@@ -1,35 +1,37 @@
 package com.blockchain.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 
 /**
- * The persistent class for the remittances database table.
+ * The persistent class for the payments database table.
  * 
  */
 @Entity
-@Table(name="remittances")
-public class Remittance extends BaseEntity implements Serializable {
+@Table(name="payments")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+public class Payment extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	private Integer amount;
+	private String currency;
 	private String comments;
 	private String description;
-	private String receiverAccountNumber;
-	private String senderAccountNumber;
 	private String status;
 
-	public Remittance() {
+	public Payment() {
 	}
-
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -39,6 +41,24 @@ public class Remittance extends BaseEntity implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Column(name="AMOUNT")
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	@Column(name="CURRENCY")
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	@Column(name="COMMENTS")
@@ -57,24 +77,6 @@ public class Remittance extends BaseEntity implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	@Column(name="RECEIVER_ACCOUNT_NUMBER")
-	public String getReceiverAccountNumber() {
-		return this.receiverAccountNumber;
-	}
-
-	public void setReceiverAccountNumber(String receiverAccountNumber) {
-		this.receiverAccountNumber = receiverAccountNumber;
-	}
-
-	@Column(name="SENDER_ACCOUNT_NUMBER")
-	public String getSenderAccountNumber() {
-		return this.senderAccountNumber;
-	}
-
-	public void setSenderAccountNumber(String senderAccountNumber) {
-		this.senderAccountNumber = senderAccountNumber;
 	}
 
 	@Column(name="STATUS")

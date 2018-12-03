@@ -7,7 +7,10 @@ public class RequestBodyVO {
 	private String receiverAccountNumber;
 	private String receiverAccountId;
 	private String transactionId;
-	private AmountVO amountVO;
+	private String accountNumber;
+	private String accountId;
+	private String redeemReferenceNo;
+	private AmountVO amount;
 	private String transTime;
 	private String extendInfo;
 	
@@ -41,11 +44,29 @@ public class RequestBodyVO {
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
-	public AmountVO getAmount() {
-		return amountVO;
+	public String getAccountNumber() {
+		return accountNumber;
 	}
-	public void setAmount(AmountVO amountVO) {
-		this.amountVO = amountVO;
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public String getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+	public String getRedeemReferenceNo() {
+		return redeemReferenceNo;
+	}
+	public void setRedeemReferenceNo(String redeemReferenceNo) {
+		this.redeemReferenceNo = redeemReferenceNo;
+	}
+	public AmountVO getAmount() {
+		return amount;
+	}
+	public void setAmount(AmountVO amount) {
+		this.amount = amount;
 	}
 	public String getTransTime() {
 		return transTime;
@@ -58,5 +79,5 @@ public class RequestBodyVO {
 	}
 	public void setExtendInfo(String extendInfo) {
 		this.extendInfo = extendInfo;
-	}	
+	}
 }

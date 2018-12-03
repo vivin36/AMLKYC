@@ -7,7 +7,7 @@ public class RequestBodyVO {
 	private String receiverAccountNumber;
 	private String receiverAccountId;
 	private String transactionId;
-	private Integer amount;
+	private AmountVO amountVO;
 	private String transTime;
 	private String extendInfo;
 	
@@ -41,11 +41,11 @@ public class RequestBodyVO {
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
-	public Integer getAmount() {
-		return amount;
+	public AmountVO getAmount() {
+		return amountVO;
 	}
-	public void setAmount(Integer amount) {
-		this.amount = amount;
+	public void setAmount(AmountVO amountVO) {
+		this.amountVO = amountVO;
 	}
 	public String getTransTime() {
 		return transTime;

@@ -9,22 +9,23 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.blockchain.business.service.IRemittanceService;
+import com.blockchain.business.service.IPaymentsService;
 import com.blockchain.vo.WrappedRequestVO;
 import com.blockchain.vo.WrappedResponseVO;
 
 @Component
-@Path("remittances")
-public class RemittanceController {
+@Path("payments")
+public class PaymentsController {
 	
 	@Autowired
-	private IRemittanceService remittanceService;
+	private IPaymentsService paymentsService;
 
+	@Path("transfer")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public WrappedResponseVO createRemittance(WrappedRequestVO request) {
-		return remittanceService.createRemittance(request);
+		return paymentsService.createRemittance(request);
 	}
 	
 }

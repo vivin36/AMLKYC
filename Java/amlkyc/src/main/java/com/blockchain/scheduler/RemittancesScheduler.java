@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.blockchain.business.service.IRemittanceService;
+import com.blockchain.business.service.IPaymentsService;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.constants.MessageConstants;
 import com.blockchain.entity.Remittance;
@@ -19,7 +19,7 @@ public class RemittancesScheduler {
 	private IScreeninglistService screeninglistService;
 	
 	@Autowired
-	private IRemittanceService remittanceService;
+	private IPaymentsService remittanceService;
 	
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void remittance() {

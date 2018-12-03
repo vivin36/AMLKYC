@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.blockchain.entity.Remittance;
 
-public interface IRemittanceDAO extends IGenericDAO<Remittance, Long> {
+public interface IPaymentsDAO extends IGenericDAO<Remittance, Long> {
 
 	public Remittance saveRemittance(Remittance remittance);
 	

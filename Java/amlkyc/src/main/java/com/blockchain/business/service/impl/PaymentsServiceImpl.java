@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.blockchain.business.service.IRemittanceService;
-import com.blockchain.dao.IRemittanceDAO;
+import com.blockchain.business.service.IPaymentsService;
+import com.blockchain.dao.IPaymentsDAO;
 import com.blockchain.entity.Remittance;
 import com.blockchain.enums.Status;
 import com.blockchain.vo.ResponseBodyVO;
@@ -19,10 +19,10 @@ import com.blockchain.vo.WrappedRequestVO;
 import com.blockchain.vo.WrappedResponseVO;
 
 @Service
-public class RemittanceServiceImpl implements IRemittanceService {
+public class PaymentsServiceImpl implements IPaymentsService {
 
 	@Autowired
-	private IRemittanceDAO remittanceDAO;
+	private IPaymentsDAO paymentsDAO;
 	
 	@Transactional
 	@Override
@@ -34,7 +34,7 @@ public class RemittanceServiceImpl implements IRemittanceService {
 		remittance.setSenderAccountNumber(wrappedRequestVO.getRequest().getBody().getSenderAccountNumber());
 		remittance.setReceiverAccountNumber(wrappedRequestVO.getRequest().getBody().getReceiverAccountNumber());
 		remittance.setStatus(Status.PENDING.getCode());
-		remittanceDAO.create(remittance);
+		paymentsDAO.create(remittance);
 		
 		WrappedResponseVO wrappedResponseVO = new WrappedResponseVO();
 		ResponseVO responseVO = new ResponseVO();
@@ -61,12 +61,12 @@ public class RemittanceServiceImpl implements IRemittanceService {
 	@Override
 	public List<Remittance> getAllRemittancesByStatus(String status) {
 		
-		return remittanceDAO.getAllRemittancesByStatus(status);
+		return paymentsDAO.getAllRemittancesByStatus(status);
 	}
 
 	@Transactional
 	@Override
 	public Remittance updateRemittance(Remittance remittance) {
-		return remittanceDAO.update(remittance);
+		return paymentsDAO.update(remittance);
 	}
 }

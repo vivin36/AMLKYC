@@ -4,15 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.springframework.stereotype.Repository;
 
-import com.blockchain.dao.IRemittanceDAO;
+import com.blockchain.dao.IPaymentsDAO;
 import com.blockchain.entity.Remittance;
 
 @Repository
-public class RemittanceDAOImpl extends GenericDAOImpl<Remittance, Long> implements IRemittanceDAO {
+public class RemittanceDAOImpl extends GenericDAOImpl<Remittance, Long> implements IPaymentsDAO {
 
 	@Override
 	public Remittance saveRemittance(Remittance remittance) {

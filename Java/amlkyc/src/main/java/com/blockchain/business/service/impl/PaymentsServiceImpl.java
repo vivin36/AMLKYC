@@ -96,4 +96,10 @@ public class PaymentsServiceImpl implements IPaymentsService {
 		
 		return wrappedResponseVO;
 	}
+
+	@Override
+	public WrappedResponseVO inputPayments(WrappedRequestVO request) {
+	
+		return null;
+	}
 }

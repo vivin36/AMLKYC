@@ -15,4 +15,5 @@ public interface IPaymentsService {
 	public Remittance updateRemittance(Remittance remittance);
 
 	public WrappedResponseVO reduceAmount(WrappedRequestVO request);
+	public WrappedResponseVO inputPayments(WrappedRequestVO request);
 }

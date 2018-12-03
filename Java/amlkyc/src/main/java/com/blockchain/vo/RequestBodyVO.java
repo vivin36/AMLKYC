@@ -13,6 +13,7 @@ public class RequestBodyVO {
 	private AmountVO amount;
 	private String transTime;
 	private String extendInfo;
+	private String inputReferenceNo;
 	
 	public String getSenderAccountNumber() {
 		return senderAccountNumber;
@@ -80,4 +81,11 @@ public class RequestBodyVO {
 	public void setExtendInfo(String extendInfo) {
 		this.extendInfo = extendInfo;
 	}
+	public String getInputReferenceNo() {
+		return inputReferenceNo;
+	}
+	public void setInputReferenceNo(String inputReferenceNo) {
+		this.inputReferenceNo = inputReferenceNo;
+	}
+	
 }

@@ -1,7 +1,11 @@
 package com.blockchain.constants;
 
 public interface MessageConstants {
-
+	
+	String INPUT_PAYMENTS_MESSAGE_SUCCESS = "Amount credited successfully";
+	
+	String INPUT_PAYMENTS_MESSAGE_FAILURE = "Account Number is blacklisted!";
+	
 	String TRANSFER_FAILURE_MESSAGE_BENEFICIARY = "Beneficiary account number is blacklisted!";
 	
 	String TRANSFER_FAILURE_MESSAGE_REMITTER = "Remitter account number is blacklisted!";

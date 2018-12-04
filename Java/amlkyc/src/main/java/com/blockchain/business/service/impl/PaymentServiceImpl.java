@@ -11,6 +11,9 @@ import com.blockchain.business.service.IPaymentService;
 import com.blockchain.dao.IReduceAmountDAO;
 import com.blockchain.dao.ITransferAmountDAO;
 import com.blockchain.entity.ReduceAmount;
+import com.blockchain.dao.IInputPaymentDAO;
+import com.blockchain.dao.ITransferAmountDAO;
+import com.blockchain.entity.InputPayment;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 import com.blockchain.exception.ApplicationException;
@@ -29,6 +32,9 @@ public class PaymentServiceImpl implements IPaymentService {
 	
 	@Autowired
 	private IReduceAmountDAO reduceAmountDAO;
+
+	@Autowired
+	private IInputPaymentDAO inputPaymentDAO;
 	
 	@Transactional
 	@Override
@@ -83,7 +89,8 @@ public class PaymentServiceImpl implements IPaymentService {
 		
 		return generateResponse(wrappedRequestVO);
 	}
-
+	
+	@Transactional
 	@Override
 	public List<ReduceAmount> getAllReduceAmountByStatus(String status) {
 		return reduceAmountDAO.getAllReduceAmountByStatus(status); 
@@ -100,8 +107,26 @@ public class PaymentServiceImpl implements IPaymentService {
 		if(!isValidSignature(wrappedRequestVO.getSignature())) {
 			throw new ApplicationException("Invalid signature received!");
 		}
-	
+		InputPayment inputPayment = new InputPayment();
+		inputPayment.setAccountId(wrappedRequestVO.getRequest().getBody().getAccountId());
+		inputPayment.setAccountNumber(wrappedRequestVO.getRequest().getBody().getAccountNumber());
+		inputPayment.setInputRefNumber(wrappedRequestVO.getRequest().getBody().getInputReferenceNo());
+		inputPayment.setCurrency(wrappedRequestVO.getRequest().getBody().getAmount().getCurrency());
+		inputPayment.setAmount(Integer.parseInt(wrappedRequestVO.getRequest().getBody().getAmount().getValue()));
+		inputPayment.setStatus(Status.PENDING.getCode());
+		inputPaymentDAO.saveInputPayment(inputPayment);
 		return generateResponse(wrappedRequestVO);
+	}
+	
+	@Override
+	public List<InputPayment> getAllInputPaymentsByStatus(String code) {
+		return inputPaymentDAO.getAllInputPaymentsByStatus(code);
+	}
+	
+	@Transactional
+	@Override
+	public InputPayment updateInputPayment(InputPayment inputPayment) {
+		return inputPaymentDAO.update(inputPayment);
 	}
 	
 	private WrappedResponseVO generateResponse(WrappedRequestVO wrappedRequestVO) {
@@ -130,5 +155,6 @@ public class PaymentServiceImpl implements IPaymentService {
 	private Boolean isValidSignature(String signature) {
 		return true;
 	}
+
 }
 

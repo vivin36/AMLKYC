@@ -10,6 +10,7 @@ import com.blockchain.business.service.IPaymentService;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.constants.MessageConstants;
 import com.blockchain.entity.ReduceAmount;
+import com.blockchain.entity.InputPayment;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 
@@ -21,6 +22,26 @@ public class PaymentScheduler {
 	
 	@Autowired
 	private IPaymentService paymentService;
+	
+	@Scheduled(cron = "0/30 * * * * ?")
+	public synchronized void inputPayments() {
+		
+		List<InputPayment> pendingInputPayments = paymentService.getAllInputPaymentsByStatus(Status.PENDING.getCode());
+		
+		for(InputPayment inputPayment : pendingInputPayments) {
+			
+			if(screeninglistService.checkIsBlackListed(inputPayment.getAccountNumber())) {
+				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_FAILURE);
+				inputPayment.setStatus(Status.FAILURE.getCode());	
+			} else {
+				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_SUCCESS);
+				inputPayment.setStatus(Status.SUCCESS.getCode());
+			}
+			paymentService.updateInputPayment(inputPayment);
+			
+		}
+		
+	}
 	
 	@Scheduled(cron = "0/45 * * * * ?")
 	public synchronized void transferAmount() {

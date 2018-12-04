@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blockchain.business.service.IPaymentService;
-import com.blockchain.dao.IPaymentDAO;
+import com.blockchain.dao.ITransferAmountDAO;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 import com.blockchain.exception.ApplicationException;
@@ -23,7 +23,7 @@ import com.blockchain.vo.WrappedResponseVO;
 public class PaymentServiceImpl implements IPaymentService {
 
 	@Autowired
-	private IPaymentDAO paymentsDAO;
+	private ITransferAmountDAO transferAmountDAO;
 	
 	@Transactional
 	@Override
@@ -43,20 +43,20 @@ public class PaymentServiceImpl implements IPaymentService {
 		transferAmount.setReceiverAccountNumber(wrappedRequestVO.getRequest().getBody().getReceiverAccountNumber());
 		transferAmount.setReceiverAccountId(wrappedRequestVO.getRequest().getBody().getReceiverAccountId());
 		transferAmount.setStatus(Status.PENDING.getCode());
-		paymentsDAO.create(transferAmount);
+		transferAmountDAO.create(transferAmount);
 		
 		return generateResponse(wrappedRequestVO);
 	}
 
 	@Override
 	public List<TransferAmount> getAllTransferAmountByStatus(String status) {
-		return paymentsDAO.getAllTransferAmountByStatus(status);
+		return transferAmountDAO.getAllTransferAmountByStatus(status);
 	}
 
 	@Transactional
 	@Override
 	public TransferAmount updateTransferAmount(TransferAmount transferAmount) {
-		return paymentsDAO.update(transferAmount);
+		return transferAmountDAO.update(transferAmount);
 	}
 
 	@Override
@@ -104,3 +104,4 @@ public class PaymentServiceImpl implements IPaymentService {
 		return true;
 	}
 }
+

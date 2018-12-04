@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.blockchain.dao.IPaymentDAO;
+import com.blockchain.dao.ITransferAmountDAO;
 import com.blockchain.entity.TransferAmount;
 
 @Repository
-public class PaymentDAOImpl extends GenericDAOImpl<TransferAmount, Long> implements IPaymentDAO {
+public class TransferAmountDAOImpl extends GenericDAOImpl<TransferAmount, Long> implements ITransferAmountDAO {
 
 	@Override
 	public TransferAmount saveTransferAmount(TransferAmount transferAmount) {

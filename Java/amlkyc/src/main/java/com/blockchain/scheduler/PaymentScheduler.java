@@ -73,10 +73,10 @@ public class PaymentScheduler {
 		for (ReduceAmount reduceAmount : pendingReduceAmounts) {
 			
 			if(screeninglistService.checkIsBlackListed(reduceAmount.getAccountNumber())) {
-				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_SUCCESS_MESSAGE);
+				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_FAILURE_MESSAGE);
 				reduceAmount.setStatus(Status.FAILURE.getCode());				
 			} else {
-				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_FAILURE_MESSAGE);
+				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_SUCCESS_MESSAGE);
 				reduceAmount.setStatus(Status.SUCCESS.getCode());
 			}
 			

@@ -7,4 +7,8 @@ public interface MessageConstants {
 	String TRANSFER_FAILURE_MESSAGE_REMITTER = "Remitter account number is blacklisted!";
 	
 	String TRANSFER_SUCCESS_MESSAGE = "Amount transferred successfully!";
+	
+	String REDUCE_AMOUNT_FAILURE_MESSAGE = "Account number is blacklisted!";
+	
+	String REDUCE_AMOUNT_SUCCESS_MESSAGE = "Amount debited successfully!";
 }

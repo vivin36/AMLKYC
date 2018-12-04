@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blockchain.business.service.IPaymentService;
+import com.blockchain.dao.IReduceAmountDAO;
 import com.blockchain.dao.ITransferAmountDAO;
+import com.blockchain.entity.ReduceAmount;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 import com.blockchain.exception.ApplicationException;
@@ -24,6 +26,9 @@ public class PaymentServiceImpl implements IPaymentService {
 
 	@Autowired
 	private ITransferAmountDAO transferAmountDAO;
+	
+	@Autowired
+	private IReduceAmountDAO reduceAmountDAO;
 	
 	@Transactional
 	@Override
@@ -59,15 +64,37 @@ public class PaymentServiceImpl implements IPaymentService {
 		return transferAmountDAO.update(transferAmount);
 	}
 
+	@Transactional
 	@Override
 	public WrappedResponseVO reduceAmount(WrappedRequestVO wrappedRequestVO) {
 		if(!isValidSignature(wrappedRequestVO.getSignature())) {
 			throw new ApplicationException("Invalid signature received!");
 		}
 		
+		ReduceAmount reduceAmount = new ReduceAmount();
+		
+		reduceAmount.setCurrency(wrappedRequestVO.getRequest().getBody().getAmount().getCurrency());
+		reduceAmount.setAmount(Integer.parseInt(wrappedRequestVO.getRequest().getBody().getAmount().getValue()));
+		reduceAmount.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
+		reduceAmount.setAccountNumber(wrappedRequestVO.getRequest().getBody().getAccountNumber());
+		reduceAmount.setAccountId(wrappedRequestVO.getRequest().getBody().getAccountId());
+		reduceAmount.setStatus(Status.PENDING.getCode());
+		reduceAmountDAO.create(reduceAmount);
+		
 		return generateResponse(wrappedRequestVO);
 	}
 
+	@Override
+	public List<ReduceAmount> getAllReduceAmountByStatus(String status) {
+		return reduceAmountDAO.getAllReduceAmountByStatus(status); 
+	}
+	
+	@Transactional
+	@Override
+	public ReduceAmount updateReduceAmount(ReduceAmount reduceAmount) {
+		return reduceAmountDAO.update(reduceAmount);
+	}
+	
 	@Override
 	public WrappedResponseVO inputPayments(WrappedRequestVO wrappedRequestVO) {
 		if(!isValidSignature(wrappedRequestVO.getSignature())) {

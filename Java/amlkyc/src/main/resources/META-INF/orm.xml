@@ -20,4 +20,12 @@
             </query>
 		</named-query>
 	</entity>
+	
+	<entity class="com.blockchain.entity.ReduceAmount">
+		<named-query name="payment.getAllReduceAmountByStatus">
+			<query>
+				FROM ReduceAmount t WHERE t.status=:status
+            </query>
+		</named-query>
+	</entity>
 </entity-mappings>

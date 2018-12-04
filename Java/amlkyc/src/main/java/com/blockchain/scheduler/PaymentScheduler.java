@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import com.blockchain.business.service.IPaymentService;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.constants.MessageConstants;
-import com.blockchain.entity.ReduceAmount;
 import com.blockchain.entity.InputPayment;
+import com.blockchain.entity.ReduceAmount;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 
@@ -30,7 +30,7 @@ public class PaymentScheduler {
 		
 		for(InputPayment inputPayment : pendingInputPayments) {
 			
-			if(screeninglistService.checkIsBlackListed(inputPayment.getAccountNumber())) {
+			if(screeninglistService.checkIsBlackListed(inputPayment.getAccountId())) {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_FAILURE);
 				inputPayment.setStatus(Status.FAILURE.getCode());	
 			} else {
@@ -50,10 +50,10 @@ public class PaymentScheduler {
 		
 		for (TransferAmount transferAmount : pendingTransfers) {
 			
-			if(screeninglistService.checkIsBlackListed(transferAmount.getSenderAccountNumber())) {
+			if(screeninglistService.checkIsBlackListed(transferAmount.getSenderAccountId())) {
 				transferAmount.setComments(MessageConstants.TRANSFER_FAILURE_MESSAGE_REMITTER);
 				transferAmount.setStatus(Status.FAILURE.getCode());				
-			} else if (screeninglistService.checkIsBlackListed(transferAmount.getReceiverAccountNumber())) {
+			} else if (screeninglistService.checkIsBlackListed(transferAmount.getReceiverAccountId())) {
 				transferAmount.setComments(MessageConstants.TRANSFER_FAILURE_MESSAGE_BENEFICIARY);
 				transferAmount.setStatus(Status.FAILURE.getCode());				
 			} else {
@@ -72,14 +72,13 @@ public class PaymentScheduler {
 		
 		for (ReduceAmount reduceAmount : pendingReduceAmounts) {
 			
-			if(screeninglistService.checkIsBlackListed(reduceAmount.getAccountNumber())) {
+			if(screeninglistService.checkIsBlackListed(reduceAmount.getAccountId())) {
 				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_FAILURE_MESSAGE);
 				reduceAmount.setStatus(Status.FAILURE.getCode());				
 			} else {
 				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_SUCCESS_MESSAGE);
 				reduceAmount.setStatus(Status.SUCCESS.getCode());
 			}
-			
 			paymentService.updateReduceAmount(reduceAmount);
 		}
 		

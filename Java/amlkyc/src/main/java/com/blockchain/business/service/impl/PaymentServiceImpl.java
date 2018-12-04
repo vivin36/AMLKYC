@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blockchain.business.service.IPaymentService;
+import com.blockchain.dao.IInputPaymentDAO;
 import com.blockchain.dao.IReduceAmountDAO;
 import com.blockchain.dao.ITransferAmountDAO;
-import com.blockchain.entity.ReduceAmount;
-import com.blockchain.dao.IInputPaymentDAO;
-import com.blockchain.dao.ITransferAmountDAO;
 import com.blockchain.entity.InputPayment;
+import com.blockchain.entity.ReduceAmount;
 import com.blockchain.entity.TransferAmount;
 import com.blockchain.enums.Status;
 import com.blockchain.exception.ApplicationException;
@@ -84,6 +83,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		reduceAmount.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
 		reduceAmount.setAccountNumber(wrappedRequestVO.getRequest().getBody().getAccountNumber());
 		reduceAmount.setAccountId(wrappedRequestVO.getRequest().getBody().getAccountId());
+		reduceAmount.setRedeemRefNo(wrappedRequestVO.getRequest().getBody().getRedeemReferenceNo());
 		reduceAmount.setStatus(Status.PENDING.getCode());
 		reduceAmountDAO.create(reduceAmount);
 		

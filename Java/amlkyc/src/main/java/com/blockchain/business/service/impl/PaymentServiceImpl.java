@@ -102,6 +102,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		return reduceAmountDAO.update(reduceAmount);
 	}
 	
+	@Transactional
 	@Override
 	public WrappedResponseVO inputPayments(WrappedRequestVO wrappedRequestVO) {
 		if(!isValidSignature(wrappedRequestVO.getSignature())) {
@@ -113,6 +114,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		inputPayment.setInputRefNumber(wrappedRequestVO.getRequest().getBody().getInputReferenceNo());
 		inputPayment.setCurrency(wrappedRequestVO.getRequest().getBody().getAmount().getCurrency());
 		inputPayment.setAmount(Integer.parseInt(wrappedRequestVO.getRequest().getBody().getAmount().getValue()));
+		inputPayment.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
 		inputPayment.setStatus(Status.PENDING.getCode());
 		inputPaymentDAO.saveInputPayment(inputPayment);
 		return generateResponse(wrappedRequestVO);

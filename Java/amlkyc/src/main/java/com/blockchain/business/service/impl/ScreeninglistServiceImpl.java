@@ -27,10 +27,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public ScreeninglistVO addToBlackListedCustomer(ScreeninglistVO screeninglistVO) {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 
 		try {
-			ScreeninglistContract.addBlackListedCustomer(screeninglistVO.getAccountAddress(),
+			screeninglistContract.addBlackListedCustomer(screeninglistVO.getAccountAddress(),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getIdentificationNumber())),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
 		} catch (Exception e) {
@@ -41,10 +41,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public ScreeninglistVO addToWhiteListedCustomer(ScreeninglistVO screeninglistVO) {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 
 		try {
-			ScreeninglistContract.addWhiteListedCustomer(screeninglistVO.getAccountAddress(),
+			screeninglistContract.addWhiteListedCustomer(screeninglistVO.getAccountAddress(),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getIdentificationNumber())),
 					Numeric.hexStringToByteArray(Utils.ASCIIToHex(screeninglistVO.getName()))).send();
 		} catch (Exception e) {
@@ -118,10 +118,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public boolean checkIsWhiteListed(String accountAddress) {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 		Boolean response = false;
 		try {
-			response = ScreeninglistContract.checkIsWhiteListed(accountAddress).send();
+			response = screeninglistContract.checkIsWhiteListed(accountAddress).send();
 		} catch (Exception e) {
 			throw new ApplicationException("Error in checking whitelisted customer");
 		}
@@ -130,10 +130,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public boolean checkIsBlackListed(String accountAddress) {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 		Boolean response = false;
 		try {
-			response = ScreeninglistContract.checkIsBlackListed(accountAddress).send();
+			response = screeninglistContract.checkIsBlackListed(accountAddress).send();
 		} catch (Exception e) {
 			throw new ApplicationException("Error in checking blacklisted customer");
 		}
@@ -142,10 +142,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public String removeFromBlackList(String accountAddress) {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 		TransactionReceipt reponse = null;
 		try {
-			reponse = ScreeninglistContract.removeBlackListedCustomer(accountAddress).send();
+			reponse = screeninglistContract.removeBlackListedCustomer(accountAddress).send();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ApplicationException("Error in removing from blacklisted customer");
@@ -168,10 +168,10 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 	@Override
 	public List<ScreeninglistVO> getAllwhiteListCustomersAddress() {
 
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 		List whiteListedCustomersAddress = null;
 		try {
-			whiteListedCustomersAddress = ScreeninglistContract.getAllWhiteListedCustomerAddress().send();
+			whiteListedCustomersAddress = screeninglistContract.getAllWhiteListedCustomerAddress().send();
 		} catch (Exception e) {
 			throw new ApplicationException("Error in retrieving from whitelisted customer address");
 		}
@@ -180,11 +180,11 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 
 	@Override
 	public List<ScreeninglistVO> getAllblackListCustomersAddress() {
-		Screeninglist ScreeninglistContract = contractsDeployer.getScreeningListContract();
+		Screeninglist screeninglistContract = contractsDeployer.getScreeningListContract();
 
 		List blackListedCustomersAddress = null;
 		try {
-			blackListedCustomersAddress = ScreeninglistContract.getAllBlackListedCustomerAddress().send();
+			blackListedCustomersAddress = screeninglistContract.getAllBlackListedCustomerAddress().send();
 		} catch (Exception e) {
 			throw new ApplicationException("Error in retrieving from blacklisted customer address");
 		}

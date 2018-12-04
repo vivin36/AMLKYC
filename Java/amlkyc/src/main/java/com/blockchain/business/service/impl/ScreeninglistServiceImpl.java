@@ -70,7 +70,7 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 			whiteListedCustNames = Utils.hexToASCIIElems(value);
 			whiteListedIDs = Utils.hexToASCIIElems(customersIDList);
 			addresses = screeninglistContract.getAllWhiteListedCustomerAddress().send();
-			for (int index = 0; index < addresses.size(); index++) {
+			for (int index = 0; index < whiteListedCustNames.size(); index++) {
 				screeninglistVO = new ScreeninglistVO();
 				screeninglistVO.setAccountAddress(addresses.get(index));
 				screeninglistVO.setName(whiteListedCustNames.get(index));

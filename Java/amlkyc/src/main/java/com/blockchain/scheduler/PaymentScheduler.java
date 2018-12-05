@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.blockchain.adapter.IDDAAdapter;
 import com.blockchain.business.service.IPaymentService;
 import com.blockchain.business.service.IScreeninglistService;
 import com.blockchain.constants.MessageConstants;
@@ -24,6 +25,9 @@ public class PaymentScheduler {
 	@Autowired
 	private IPaymentService paymentService;
 	
+	@Autowired
+	private IDDAAdapter iddaAdapter;
+	
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void inputPayments() {
 		
@@ -37,9 +41,10 @@ public class PaymentScheduler {
 			} else {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_SUCCESS);
 				inputPayment.setStatus(Status.SUCCESS.getCode());
+				
+				
 			}
 			paymentService.updateInputPayment(inputPayment);
-			
 		}
 		
 	}

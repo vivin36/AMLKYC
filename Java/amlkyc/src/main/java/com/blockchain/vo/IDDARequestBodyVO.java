@@ -9,6 +9,7 @@ public class IDDARequestBodyVO {
 	private AmountVO senderAmount;
 	private AmountVO receiverAmount;
 	private String transCurrency;
+	private String inputReferenceNo;
 	private String extendInfo;
 	
 	public ResultOnChainVO getResultOnChain() {
@@ -53,10 +54,16 @@ public class IDDARequestBodyVO {
 	public void setTransCurrency(String transCurrency) {
 		this.transCurrency = transCurrency;
 	}
+	public String getInputReferenceNo() {
+		return inputReferenceNo;
+	}
+	public void setInputReferenceNo(String inputReferenceNo) {
+		this.inputReferenceNo = inputReferenceNo;
+	}
 	public String getExtendInfo() {
 		return extendInfo;
 	}
 	public void setExtendInfo(String extendInfo) {
 		this.extendInfo = extendInfo;
-	}	
+	}		
 }

@@ -123,12 +123,16 @@ public class PaymentScheduler {
 				iddaRequestBodyVO.setSenderAmount(amount);
 				iddaRequestBodyVO.setReceiverAmount(amount);
 				iddaRequestBodyVO.setTransCurrency("PHP");
+				iddaRequestBodyVO.setCompletedTime(String.valueOf(transferAmount.getModTs()));
 				
 				iDDANotificationVO.setBody(iddaRequestBodyVO);
 				iDDANotificationVO.setHead(requestHeadVO);
 				
 				wrappedIDDANotificationVO.setSignature("signature string");
 				wrappedIDDANotificationVO.setRequest(iDDANotificationVO);
+				
+				iddaAdapter.post(wrappedIDDANotificationVO, target, path, 
+						MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
 			}
 			
 			paymentService.updateTransferAmount(transferAmount);

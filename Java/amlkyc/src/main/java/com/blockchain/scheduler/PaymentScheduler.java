@@ -61,7 +61,8 @@ public class PaymentScheduler {
 				inputPayment.setStatus(Status.SUCCESS.getCode());
 				status = true;
 			}
-			paymentService.updateInputPayment(inputPayment);
+			
+			InputPayment updatedinputPayment = paymentService.updateInputPayment(inputPayment);
 
 			if (status) {
 				RequestHeadVO requestHeadVO = new RequestHeadVO();
@@ -72,10 +73,15 @@ public class PaymentScheduler {
 
 				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
 				AmountVO amountVO = new AmountVO();
+				ResultOnChainVO resultOnChainVO = new ResultOnChainVO();
+				resultOnChainVO.setResultStatus("S");				
+				resultOnChainVO.setResultCode("00000000");
+				resultOnChainVO.setResultMsg("success");
 				amountVO.setCurrency(inputPayment.getCurrency());
 				amountVO.setValue(String.valueOf(inputPayment.getAmount()));
+				iddaRequestBodyVO.setResultOnChain(resultOnChainVO);
 				iddaRequestBodyVO.setAmount(amountVO);
-				iddaRequestBodyVO.setCompletedTime(String.valueOf(inputPayment.getModTs()));
+				iddaRequestBodyVO.setCompletedTime(String.valueOf(updatedinputPayment.getModTs()));
 				iddaRequestBodyVO.setInputReferenceNo(inputPayment.getInputRefNumber());
 
 				IDDANotificationVO iddaNotificationVO = new IDDANotificationVO();
@@ -137,6 +143,7 @@ public class PaymentScheduler {
 				resultOnChainVO.setResultMsg("success");
 				amount.setCurrency(transferAmount.getCurrency());
 				amount.setValue(String.valueOf(transferAmount.getAmount()));
+				iddaRequestBodyVO.setResultOnChain(resultOnChainVO);
 				iddaRequestBodyVO.setSenderId("1020000000002160");
 				iddaRequestBodyVO.setReceiverId("1020000000002170");
 				iddaRequestBodyVO.setTxId("12345379817323");
@@ -190,9 +197,15 @@ public class PaymentScheduler {
 				AmountVO amountVO = new AmountVO();
 				amountVO.setCurrency(reduceAmount.getCurrency());
 				amountVO.setValue(String.valueOf(reduceAmount.getAmount()));
+				ResultOnChainVO resultOnChainVO = new ResultOnChainVO();
+				resultOnChainVO.setResultStatus("S");				
+				resultOnChainVO.setResultCode("00000000");
+				resultOnChainVO.setResultMsg("success");
 				iddaRequestBodyVO.setAmount(amountVO);
-				iddaRequestBodyVO.setCompletedTime(String.valueOf(reduceAmount.getModTs()));
+				iddaRequestBodyVO.setResultOnChain(resultOnChainVO);
 				iddaRequestBodyVO.setInputReferenceNo(reduceAmount.getRedeemRefNo());
+				iddaRequestBodyVO.setCompletedTime(String.valueOf(reduceAmount.getModTs()));
+				
 				
 				IDDANotificationVO iddaNotificationVO = new IDDANotificationVO();
 				iddaNotificationVO.setHead(requestHeadVO);

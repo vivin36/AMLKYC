@@ -1,7 +1,5 @@
 package com.blockchain.adapter;
 
-import java.io.IOException;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,7 +14,7 @@ public class IDDAAdapter {
 	private RestClient restClient;
 
 	public <T> Response post(T object, String target, String path, 
-			MediaType acceptMediaType, MediaType requestMediaType)throws IOException {
+			MediaType acceptMediaType, MediaType requestMediaType) {
 		
 		Response response = restClient
 							.getClient()

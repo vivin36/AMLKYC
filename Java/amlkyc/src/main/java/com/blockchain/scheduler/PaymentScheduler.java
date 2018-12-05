@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +37,13 @@ public class PaymentScheduler {
 
 	@Autowired
 	private IDDAAdapter iddaAdapter;
-
+	
+	@Value("${idda.notification.target}")
+	private String target;
+	
+	@Value("${idda.notification.path}")
+	private String path;
+	
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void inputPayments() {
 
@@ -48,7 +57,30 @@ public class PaymentScheduler {
 			} else {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_SUCCESS);
 				inputPayment.setStatus(Status.SUCCESS.getCode());
-
+				
+				RequestHeadVO requestHeadVO = new RequestHeadVO();
+				requestHeadVO.setVersion("1.0.0");
+				requestHeadVO.setOperation("input");
+				requestHeadVO.setClientId("211020000000000000044");
+				requestHeadVO.setRequestTime(LocalDate.now().toString());
+				
+				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
+				AmountVO amountVO = new AmountVO();
+				amountVO.setCurrency(inputPayment.getCurrency());
+				amountVO.setValue(String.valueOf(inputPayment.getAmount()));
+				iddaRequestBodyVO.setAmount(amountVO);
+				iddaRequestBodyVO.setCompletedTime(String.valueOf(inputPayment.getModTs()));
+				iddaRequestBodyVO.setInputReferenceNo(inputPayment.getInputRefNumber());
+				
+				IDDANotificationVO iddaNotificationVO = new IDDANotificationVO();
+				iddaNotificationVO.setHead(requestHeadVO);
+				iddaNotificationVO.setBody(iddaRequestBodyVO);
+				
+				WrappedIDDANotificationVO wrappedIDDANotificationVO = new WrappedIDDANotificationVO();
+				wrappedIDDANotificationVO.setRequest(iddaNotificationVO);
+				
+				iddaAdapter.post(wrappedIDDANotificationVO, target, path, 
+						MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
 			}
 			paymentService.updateInputPayment(inputPayment);
 		}

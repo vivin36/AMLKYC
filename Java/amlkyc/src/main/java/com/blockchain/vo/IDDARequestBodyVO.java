@@ -11,6 +11,8 @@ public class IDDARequestBodyVO {
 	private String transCurrency;
 	private String inputReferenceNo;
 	private String extendInfo;
+	private AmountVO amount;
+	private String completedTime;
 	
 	public ResultOnChainVO getResultOnChain() {
 		return resultOnChain;
@@ -65,5 +67,17 @@ public class IDDARequestBodyVO {
 	}
 	public void setExtendInfo(String extendInfo) {
 		this.extendInfo = extendInfo;
-	}		
+	}
+	public AmountVO getAmount() {
+		return amount;
+	}
+	public void setAmount(AmountVO amount) {
+		this.amount = amount;
+	}
+	public String getCompletedTime() {
+		return completedTime;
+	}
+	public void setCompletedTime(String completedTime) {
+		this.completedTime = completedTime;
+	}	
 }

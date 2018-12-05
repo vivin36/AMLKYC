@@ -22,7 +22,6 @@ import com.blockchain.enums.Status;
 import com.blockchain.vo.AmountVO;
 import com.blockchain.vo.IDDANotificationVO;
 import com.blockchain.vo.IDDARequestBodyVO;
-import com.blockchain.vo.RequestBodyVO;
 import com.blockchain.vo.RequestHeadVO;
 import com.blockchain.vo.WrappedIDDANotificationVO;
 
@@ -89,6 +88,7 @@ public class PaymentScheduler {
 						MediaType.APPLICATION_JSON_TYPE);
 
 				status = false;
+				wrappedIDDANotificationVO = null;
 			}
 		}
 
@@ -112,7 +112,7 @@ public class PaymentScheduler {
 			} else {
 				transferAmount.setComments(MessageConstants.TRANSFER_SUCCESS_MESSAGE);
 				transferAmount.setStatus(Status.SUCCESS.getCode());
-
+				status = true;
 			}
 
 			paymentService.updateTransferAmount(transferAmount);
@@ -149,13 +149,16 @@ public class PaymentScheduler {
 						MediaType.APPLICATION_JSON_TYPE);
 				
 				status = false;
+				wrappedIDDANotificationVO = null;
 			}
 		}
 	}
 
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void reduceAmount() throws IOException {
-
+		
+		boolean status = false;
+		
 		List<ReduceAmount> pendingReduceAmounts = paymentService.getAllReduceAmountByStatus(Status.PENDING.getCode());
 
 		for (ReduceAmount reduceAmount : pendingReduceAmounts) {
@@ -166,8 +169,38 @@ public class PaymentScheduler {
 			} else {
 				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_SUCCESS_MESSAGE);
 				reduceAmount.setStatus(Status.SUCCESS.getCode());
+				status = true;
 			}
 			paymentService.updateReduceAmount(reduceAmount);
+			
+			if(status) {
+				RequestHeadVO requestHeadVO = new RequestHeadVO();
+				requestHeadVO.setVersion("1.0.0");
+				requestHeadVO.setOperation("input");
+				requestHeadVO.setClientId("211020000000000000044");
+				requestHeadVO.setRequestTime(LocalDate.now().toString());
+				
+				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
+				AmountVO amountVO = new AmountVO();
+				amountVO.setCurrency(reduceAmount.getCurrency());
+				amountVO.setValue(String.valueOf(reduceAmount.getAmount()));
+				iddaRequestBodyVO.setAmount(amountVO);
+				iddaRequestBodyVO.setCompletedTime(String.valueOf(reduceAmount.getModTs()));
+				iddaRequestBodyVO.setInputReferenceNo(reduceAmount.getRedeemRefNo());
+				
+				IDDANotificationVO iddaNotificationVO = new IDDANotificationVO();
+				iddaNotificationVO.setHead(requestHeadVO);
+				iddaNotificationVO.setBody(iddaRequestBodyVO);
+
+				WrappedIDDANotificationVO wrappedIDDANotificationVO = new WrappedIDDANotificationVO();
+				wrappedIDDANotificationVO.setRequest(iddaNotificationVO);
+				
+				iddaAdapter.post(wrappedIDDANotificationVO, target, path, MediaType.APPLICATION_JSON_TYPE,
+						MediaType.APPLICATION_JSON_TYPE);
+
+				status = false;
+				wrappedIDDANotificationVO = null;
+			}
 		}
 
 	}

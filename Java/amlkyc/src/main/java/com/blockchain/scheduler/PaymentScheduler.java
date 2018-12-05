@@ -1,5 +1,6 @@
 package com.blockchain.scheduler;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class PaymentScheduler {
 	}
 	
 	@Scheduled(cron = "0/30 * * * * ?")
-	public synchronized void reduceAmount() {
+	public synchronized void reduceAmount() throws IOException {
 		
 		List<ReduceAmount> pendingReduceAmounts = paymentService.getAllReduceAmountByStatus(Status.PENDING.getCode());
 		

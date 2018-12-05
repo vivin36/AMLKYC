@@ -147,7 +147,6 @@ public class ScreeninglistServiceImpl implements IScreeninglistService {
 		try {
 			reponse = screeninglistContract.removeBlackListedCustomer(accountAddress).send();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ApplicationException("Error in removing from blacklisted customer");
 		}
 		return reponse.getTransactionHash();

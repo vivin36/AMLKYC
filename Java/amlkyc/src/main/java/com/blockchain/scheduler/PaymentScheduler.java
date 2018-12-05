@@ -22,18 +22,19 @@ import com.blockchain.enums.Status;
 import com.blockchain.vo.AmountVO;
 import com.blockchain.vo.IDDANotificationVO;
 import com.blockchain.vo.IDDARequestBodyVO;
+import com.blockchain.vo.RequestBodyVO;
 import com.blockchain.vo.RequestHeadVO;
 import com.blockchain.vo.WrappedIDDANotificationVO;
 
 @Component
 public class PaymentScheduler {
-	
+
 	@Autowired
 	private IScreeninglistService screeninglistService;
-	
+
 	@Autowired
 	private IPaymentService paymentService;
-	
+
 	@Autowired
 	private IDDAAdapter iddaAdapter;
 	
@@ -49,12 +50,12 @@ public class PaymentScheduler {
 		boolean status = false; 
 		
 		List<InputPayment> pendingInputPayments = paymentService.getAllInputPaymentsByStatus(Status.PENDING.getCode());
-		
-		for(InputPayment inputPayment : pendingInputPayments) {
-			
-			if(screeninglistService.checkIsBlackListed(inputPayment.getAccountId())) {
+
+		for (InputPayment inputPayment : pendingInputPayments) {
+
+			if (screeninglistService.checkIsBlackListed(inputPayment.getAccountId())) {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_FAILURE);
-				inputPayment.setStatus(Status.FAILURE.getCode());	
+				inputPayment.setStatus(Status.FAILURE.getCode());
 			} else {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_SUCCESS);
 				inputPayment.setStatus(Status.SUCCESS.getCode());
@@ -90,9 +91,9 @@ public class PaymentScheduler {
 				status = false;
 			}
 		}
-		
+
 	}
-	
+
 	@Scheduled(cron = "0/45 * * * * ?")
 	public synchronized void transferAmount() {
 		
@@ -109,28 +110,54 @@ public class PaymentScheduler {
 			} else {
 				transferAmount.setComments(MessageConstants.TRANSFER_SUCCESS_MESSAGE);
 				transferAmount.setStatus(Status.SUCCESS.getCode());
+				WrappedIDDANotificationVO wrappedIDDANotificationVO = new WrappedIDDANotificationVO();
+				
+				IDDANotificationVO iDDANotificationVO = new IDDANotificationVO();
+				
+				RequestHeadVO requestHeadVO = new RequestHeadVO();
+				requestHeadVO.setVersion("1.0.0");
+				requestHeadVO.setClientId("4H00000010000002");
+				requestHeadVO.setRequestTime(LocalDate.now().toString());
+				requestHeadVO.setRequestMsgId("1234567asdfasdf1123fda");
+				
+				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
+				AmountVO amount = new AmountVO();
+				amount.setCurrency(transferAmount.getCurrency());
+				amount.setValue(String.valueOf( transferAmount.getAmount()) );
+				iddaRequestBodyVO.setSenderId("1020000000002160");
+				iddaRequestBodyVO.setReceiverId("1020000000002170");
+				iddaRequestBodyVO.setTxId("12345379817323");
+				iddaRequestBodyVO.setSenderAmount(amount);
+				iddaRequestBodyVO.setReceiverAmount(amount);
+				iddaRequestBodyVO.setTransCurrency("PHP");
+				
+				iDDANotificationVO.setBody(iddaRequestBodyVO);
+				iDDANotificationVO.setHead(requestHeadVO);
+				
+				wrappedIDDANotificationVO.setSignature("signature string");
+				wrappedIDDANotificationVO.setRequest(iDDANotificationVO);
 			}
 			
 			paymentService.updateTransferAmount(transferAmount);
 		}
 	}
-	
+
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void reduceAmount() throws IOException {
-		
+
 		List<ReduceAmount> pendingReduceAmounts = paymentService.getAllReduceAmountByStatus(Status.PENDING.getCode());
-		
+
 		for (ReduceAmount reduceAmount : pendingReduceAmounts) {
-			
-			if(screeninglistService.checkIsBlackListed(reduceAmount.getAccountId())) {
+
+			if (screeninglistService.checkIsBlackListed(reduceAmount.getAccountId())) {
 				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_FAILURE_MESSAGE);
-				reduceAmount.setStatus(Status.FAILURE.getCode());				
+				reduceAmount.setStatus(Status.FAILURE.getCode());
 			} else {
 				reduceAmount.setComments(MessageConstants.REDUCE_AMOUNT_SUCCESS_MESSAGE);
 				reduceAmount.setStatus(Status.SUCCESS.getCode());
 			}
 			paymentService.updateReduceAmount(reduceAmount);
 		}
-		
+
 	}
 }

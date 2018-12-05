@@ -37,18 +37,18 @@ public class PaymentScheduler {
 
 	@Autowired
 	private IDDAAdapter iddaAdapter;
-	
+
 	@Value("${idda.notification.target}")
 	private String target;
-	
+
 	@Value("${idda.notification.path}")
 	private String path;
-	
+
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void inputPayments() {
-		
-		boolean status = false; 
-		
+
+		boolean status = false;
+
 		List<InputPayment> pendingInputPayments = paymentService.getAllInputPaymentsByStatus(Status.PENDING.getCode());
 
 		for (InputPayment inputPayment : pendingInputPayments) {
@@ -62,14 +62,14 @@ public class PaymentScheduler {
 				status = true;
 			}
 			paymentService.updateInputPayment(inputPayment);
-			
-			if(status) {
+
+			if (status) {
 				RequestHeadVO requestHeadVO = new RequestHeadVO();
 				requestHeadVO.setVersion("1.0.0");
 				requestHeadVO.setOperation("input");
 				requestHeadVO.setClientId("211020000000000000044");
 				requestHeadVO.setRequestTime(LocalDate.now().toString());
-				
+
 				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
 				AmountVO amountVO = new AmountVO();
 				amountVO.setCurrency(inputPayment.getCurrency());
@@ -77,17 +77,17 @@ public class PaymentScheduler {
 				iddaRequestBodyVO.setAmount(amountVO);
 				iddaRequestBodyVO.setCompletedTime(String.valueOf(inputPayment.getModTs()));
 				iddaRequestBodyVO.setInputReferenceNo(inputPayment.getInputRefNumber());
-				
+
 				IDDANotificationVO iddaNotificationVO = new IDDANotificationVO();
 				iddaNotificationVO.setHead(requestHeadVO);
 				iddaNotificationVO.setBody(iddaRequestBodyVO);
-				
+
 				WrappedIDDANotificationVO wrappedIDDANotificationVO = new WrappedIDDANotificationVO();
 				wrappedIDDANotificationVO.setRequest(iddaNotificationVO);
-				
-				iddaAdapter.post(wrappedIDDANotificationVO, target, path, 
-						MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
-				
+
+				iddaAdapter.post(wrappedIDDANotificationVO, target, path, MediaType.APPLICATION_JSON_TYPE,
+						MediaType.APPLICATION_JSON_TYPE);
+
 				status = false;
 			}
 		}
@@ -96,34 +96,41 @@ public class PaymentScheduler {
 
 	@Scheduled(cron = "0/45 * * * * ?")
 	public synchronized void transferAmount() {
-		
+
+		boolean status = false;
+
 		List<TransferAmount> pendingTransfers = paymentService.getAllTransferAmountByStatus(Status.PENDING.getCode());
-		
+
 		for (TransferAmount transferAmount : pendingTransfers) {
-			
-			if(screeninglistService.checkIsBlackListed(transferAmount.getSenderAccountId())) {
+
+			if (screeninglistService.checkIsBlackListed(transferAmount.getSenderAccountId())) {
 				transferAmount.setComments(MessageConstants.TRANSFER_FAILURE_MESSAGE_REMITTER);
-				transferAmount.setStatus(Status.FAILURE.getCode());				
+				transferAmount.setStatus(Status.FAILURE.getCode());
 			} else if (screeninglistService.checkIsBlackListed(transferAmount.getReceiverAccountId())) {
 				transferAmount.setComments(MessageConstants.TRANSFER_FAILURE_MESSAGE_BENEFICIARY);
-				transferAmount.setStatus(Status.FAILURE.getCode());				
+				transferAmount.setStatus(Status.FAILURE.getCode());
 			} else {
 				transferAmount.setComments(MessageConstants.TRANSFER_SUCCESS_MESSAGE);
 				transferAmount.setStatus(Status.SUCCESS.getCode());
+
+			}
+
+			paymentService.updateTransferAmount(transferAmount);
+			if (status) {
 				WrappedIDDANotificationVO wrappedIDDANotificationVO = new WrappedIDDANotificationVO();
-				
+
 				IDDANotificationVO iDDANotificationVO = new IDDANotificationVO();
-				
+
 				RequestHeadVO requestHeadVO = new RequestHeadVO();
 				requestHeadVO.setVersion("1.0.0");
 				requestHeadVO.setClientId("4H00000010000002");
 				requestHeadVO.setRequestTime(LocalDate.now().toString());
 				requestHeadVO.setRequestMsgId("1234567asdfasdf1123fda");
-				
+
 				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
 				AmountVO amount = new AmountVO();
 				amount.setCurrency(transferAmount.getCurrency());
-				amount.setValue(String.valueOf( transferAmount.getAmount()) );
+				amount.setValue(String.valueOf(transferAmount.getAmount()));
 				iddaRequestBodyVO.setSenderId("1020000000002160");
 				iddaRequestBodyVO.setReceiverId("1020000000002170");
 				iddaRequestBodyVO.setTxId("12345379817323");
@@ -131,18 +138,18 @@ public class PaymentScheduler {
 				iddaRequestBodyVO.setReceiverAmount(amount);
 				iddaRequestBodyVO.setTransCurrency("PHP");
 				iddaRequestBodyVO.setCompletedTime(String.valueOf(transferAmount.getModTs()));
-				
+
 				iDDANotificationVO.setBody(iddaRequestBodyVO);
 				iDDANotificationVO.setHead(requestHeadVO);
-				
+
 				wrappedIDDANotificationVO.setSignature("signature string");
 				wrappedIDDANotificationVO.setRequest(iDDANotificationVO);
+
+				iddaAdapter.post(wrappedIDDANotificationVO, target, path, MediaType.APPLICATION_JSON_TYPE,
+						MediaType.APPLICATION_JSON_TYPE);
 				
-				iddaAdapter.post(wrappedIDDANotificationVO, target, path, 
-						MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
+				status = false;
 			}
-			
-			paymentService.updateTransferAmount(transferAmount);
 		}
 	}
 

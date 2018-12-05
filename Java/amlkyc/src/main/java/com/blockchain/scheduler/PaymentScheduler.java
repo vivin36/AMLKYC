@@ -46,7 +46,9 @@ public class PaymentScheduler {
 	
 	@Scheduled(cron = "0/30 * * * * ?")
 	public synchronized void inputPayments() {
-
+		
+		boolean status = false; 
+		
 		List<InputPayment> pendingInputPayments = paymentService.getAllInputPaymentsByStatus(Status.PENDING.getCode());
 
 		for (InputPayment inputPayment : pendingInputPayments) {
@@ -57,7 +59,11 @@ public class PaymentScheduler {
 			} else {
 				inputPayment.setComments(MessageConstants.INPUT_PAYMENTS_MESSAGE_SUCCESS);
 				inputPayment.setStatus(Status.SUCCESS.getCode());
-				
+				status = true;
+			}
+			paymentService.updateInputPayment(inputPayment);
+			
+			if(status) {
 				RequestHeadVO requestHeadVO = new RequestHeadVO();
 				requestHeadVO.setVersion("1.0.0");
 				requestHeadVO.setOperation("input");
@@ -81,8 +87,9 @@ public class PaymentScheduler {
 				
 				iddaAdapter.post(wrappedIDDANotificationVO, target, path, 
 						MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_JSON_TYPE);
+				
+				status = false;
 			}
-			paymentService.updateInputPayment(inputPayment);
 		}
 
 	}

@@ -24,6 +24,7 @@ import com.blockchain.vo.IDDANotificationVO;
 import com.blockchain.vo.IDDARequestBodyVO;
 import com.blockchain.vo.RequestBodyVO;
 import com.blockchain.vo.RequestHeadVO;
+import com.blockchain.vo.ResultOnChainVO;
 import com.blockchain.vo.WrappedIDDANotificationVO;
 
 @Component
@@ -126,9 +127,14 @@ public class PaymentScheduler {
 				requestHeadVO.setClientId("4H00000010000002");
 				requestHeadVO.setRequestTime(LocalDate.now().toString());
 				requestHeadVO.setRequestMsgId("1234567asdfasdf1123fda");
+				requestHeadVO.setOperation("transfer");
 
 				IDDARequestBodyVO iddaRequestBodyVO = new IDDARequestBodyVO();
 				AmountVO amount = new AmountVO();
+				ResultOnChainVO resultOnChainVO = new ResultOnChainVO();
+				resultOnChainVO.setResultStatus("S");				
+				resultOnChainVO.setResultCode("00000000");
+				resultOnChainVO.setResultMsg("success");
 				amount.setCurrency(transferAmount.getCurrency());
 				amount.setValue(String.valueOf(transferAmount.getAmount()));
 				iddaRequestBodyVO.setSenderId("1020000000002160");

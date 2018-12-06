@@ -1,8 +1,5 @@
 # AMLKYC
 
-
-# AMLKYC
-
 # Prerequisite
 
   - Java 8

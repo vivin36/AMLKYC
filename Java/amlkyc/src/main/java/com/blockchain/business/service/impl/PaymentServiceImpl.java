@@ -116,7 +116,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		inputPayment.setAmount(Integer.parseInt(wrappedRequestVO.getRequest().getBody().getAmount().getValue()));
 		inputPayment.setDescription(wrappedRequestVO.getRequest().getHead().getDescription());
 		inputPayment.setStatus(Status.PENDING.getCode());
-		inputPaymentDAO.saveInputPayment(inputPayment);
+		inputPaymentDAO.create(inputPayment);
 		return generateResponse(wrappedRequestVO);
 	}
 	

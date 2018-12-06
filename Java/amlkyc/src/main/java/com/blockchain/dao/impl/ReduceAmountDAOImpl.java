@@ -13,16 +13,6 @@ import com.blockchain.entity.ReduceAmount;
 public class ReduceAmountDAOImpl extends GenericDAOImpl<ReduceAmount, Long> implements IReduceAmountDAO {
 
 	@Override
-	public ReduceAmount saveReduceAmount(ReduceAmount reduceAmount) {
-		return create(reduceAmount);
-	}
-
-	@Override
-	public ReduceAmount updateReduceAmount(ReduceAmount reduceAmount) {
-		return update(reduceAmount);
-	}
-
-	@Override
 	public List<ReduceAmount> getAllReduceAmountByStatus(String status) {
 		final Map<String, String> parameterMap = new HashMap<>();
 		parameterMap.put("status", status);

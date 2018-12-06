@@ -5,8 +5,8 @@
 	<groupId>com.blockchain</groupId>
 	<artifactId>amlkyc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SpringbootReference</name>
-	<description>SpringbootReference</description>
+	<name>AMLKYC</name>
+	<description>AMLKYC</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

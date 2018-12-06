@@ -13,16 +13,6 @@ import com.blockchain.entity.TransferAmount;
 public class TransferAmountDAOImpl extends GenericDAOImpl<TransferAmount, Long> implements ITransferAmountDAO {
 
 	@Override
-	public TransferAmount saveTransferAmount(TransferAmount transferAmount) {
-		return create(transferAmount);
-	}
-
-	@Override
-	public TransferAmount updateTransferAmount(TransferAmount transferAmount) {
-		return update(transferAmount);
-	}
-
-	@Override
 	public List<TransferAmount> getAllTransferAmountByStatus(String status) {
 		final Map<String, String> parameterMap = new HashMap<>();
 		parameterMap.put("status", status);

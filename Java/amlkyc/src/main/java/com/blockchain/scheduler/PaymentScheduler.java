@@ -189,7 +189,7 @@ public class PaymentScheduler {
 			if(status) {
 				RequestHeadVO requestHeadVO = new RequestHeadVO();
 				requestHeadVO.setVersion("1.0.0");
-				requestHeadVO.setOperation("input");
+				requestHeadVO.setOperation("reduce");
 				requestHeadVO.setClientId("211020000000000000044");
 				requestHeadVO.setRequestTime(LocalDate.now().toString());
 				

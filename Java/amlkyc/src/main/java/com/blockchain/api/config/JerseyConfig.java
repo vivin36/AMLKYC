@@ -12,10 +12,9 @@ import com.blockchain.api.ScreeninglistController;
 public class JerseyConfig extends ResourceConfig {
 	
 	public JerseyConfig() {
-		packages("com");
         register(HealthCheck.class);
         register(CustomerController.class);
         register(ScreeninglistController.class);
-        register(PaymentController.class);
+        register(PaymentController.class);        
     }
 }

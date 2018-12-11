@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<!-- Console Appender -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<!-- Rolling File Appender -->
+		<RollingFile name="RollingFile">
+			<FileName>./logs/application.log</FileName>
+			<FilePattern>./logs/archived/%d{yyyy-MM-dd-hh-mm}.log.zip
+			</FilePattern>
+			<PatternLayout>
+				<Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} -
+					%msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="2 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="5" />
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+		<!-- Log everything in custom package -->
+		<Logger name="com.blockchain" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+		<!-- Log everything in Spring Boot -->
+		<Logger name="org.springframework.boot" level="info"
+			additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+		<Root level="error">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

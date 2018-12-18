@@ -158,5 +158,19 @@ public class PaymentServiceImpl implements IPaymentService {
 		return true;
 	}
 
+	@Override
+	public List<InputPayment> getAllInputPayments() {
+		return inputPaymentDAO.findAll();
+	}
+
+	@Override
+	public List<TransferAmount> getAllTransferAmounts() {
+		return transferAmountDAO.findAll();
+	}
+
+	@Override
+	public List<ReduceAmount> getAllRedemtions() {
+		return reduceAmountDAO.findAll();
+	}
 }
 

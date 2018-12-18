@@ -28,5 +28,9 @@ public interface IPaymentService {
 	
 	public WrappedResponseVO inputPayments(WrappedRequestVO request);
 
+	public List<InputPayment> getAllInputPayments();
 
+	public List<TransferAmount> getAllTransferAmounts();
+
+	public List<ReduceAmount> getAllRedemtions();
 }

@@ -19,7 +19,6 @@ export const getCall = props => (dispatch) => {
   api
     .get(`${props.endpoint}/${props.data || ''}`)
     .then((res) => {
-      console.log(res.status)
       if (res.status === 200) {
         const response = res;
         if (response ) {
@@ -28,7 +27,7 @@ export const getCall = props => (dispatch) => {
             payload: response,
           });
 
-          // Push routes here if any
+        
           if (props.route) {
             if (props.success === projectConstants.PROJECT_DETAILS_SUCCESS) {
               dispatch(

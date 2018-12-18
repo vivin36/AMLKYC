@@ -11,7 +11,7 @@ const CreateKYCForm = (props) => {
         <label>Account Number</label>
         <div>
           <Field
-            name="accountNumber"
+            name="account"
             component="input"
             type="text"
             placeholder="Account Number"

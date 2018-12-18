@@ -1,6 +1,6 @@
 const config = {
   dev: {
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:7070/amlkyc/api/v1',
     blockURL: '',
     apiKey: '',
     timeout: 10000,

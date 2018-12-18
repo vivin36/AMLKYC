@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
         isFetching: true,
       };
     case KYCConstants.KYC_CREATE_SUCCESS:
-      alert('Success');
+      alert(('address',action.payload.address));
       return {
         ...state,
         KYCDetails: action.payload,

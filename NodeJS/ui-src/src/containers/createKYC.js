@@ -16,7 +16,6 @@ class CreateKYC extends React.Component {
   }
 
   showResults(KYCDetails) {
-    console.log(KYCDetails);
     this.props.createKYC(KYCDetails);
   }
 

@@ -54,33 +54,31 @@ class GetKYCDetails extends React.Component {
         {this.props.KYCReducer?
        <div className="ml-5"> <h1>KYC details</h1>
         <table className="table table-bordered"> 
-        <thead><th>
-                 Name
-               </th>               
-               <th>
-                Customer Type - I
-               </th>
-               <th>
-                Customer Type - II
-               </th>               
-               <th>
-               Validated Date
-               </th>
-               <th>
-               Validation End Date
-               </th>
-               </thead>
-              <tr>
-                 <td>{this.props.KYCReducer.name}</td>                 
+        <thead>
+          <tr>
+            <th>
+                  Name
+                </th>               
+                <th>
+                  Customer Type - I
+                </th>
+                <th>
+                  Customer Type - II
+                </th>               
+             {/*    <th>
+                IsParent
+                </th>    */}
+                </tr>             
+                </thead>
+                <tbody>          
+            <tr>
+                 <td>{(this.props.KYCReducer.name)}</td>                 
                  <td>{this.props.KYCReducer.customerType == 0 ? 'Banking' : this.props.KYCReducer.customerType == 1 ? 'Retail' : 'Corporate'}</td>
                  <td>{this.props.KYCReducer.isParent == true ? 'Parent' : 'Subsidary'}</td>                 
-                 <td>{getFormattedDate(this.props.KYCReducer.validatedDate * 1000 )}</td> 
-                 <td>{getFormattedDate(this.props.KYCReducer.validationEndDate)}</td>                  
-               </tr>
+     {/*             <td>{(this.props.KYCReducer.isParentCustomer)}</td>  */}               
+               </tr></tbody>  
              </table></div> :''}
-        </div>
-         
-       
+        </div>    
         </div>
     </div>
     );

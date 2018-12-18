@@ -12,15 +12,15 @@ const createKYC = KYCDocuments => (dispatch) => {
   });
   const  d = new Date();
   const c = new Date(d.getFullYear() + 1, d.getMonth(),  d.getDate())
-  KYCDocuments.validationEndDate = c.getTime();
-  KYCDocuments.kycStatus = 0;
+ /*  KYCDocuments.validationEndDate = c.getTime();
+  KYCDocuments.kycStatus = 0; */
   if (KYCDocuments.isParentCustomer === "true")
     KYCDocuments.isParentCustomer = true;
   else
     KYCDocuments.isParentCustomer = false;
   const KYCDetails = {
     data: KYCDocuments,
-    endpoint: '/kyc',
+    endpoint: '/customers',
     success: KYCConstants.KYC_CREATE_SUCCESS,
     error: KYCConstants.KYC_CREATE_FAILURE,
     route: '/fetchKYC',
@@ -38,7 +38,7 @@ const getKYCDetails = (accountNumber) => (dispatch) => {
   });
 
   const KYCDetails = {  
-    endpoint: '/kyc/'+accountNumber,
+    endpoint: '/customers/'+accountNumber,
     success: KYCConstants.KYC_GETDETAILS_SUCCESS,
     error: KYCConstants.KYC_GETDETAILS_FAILURE,
   };

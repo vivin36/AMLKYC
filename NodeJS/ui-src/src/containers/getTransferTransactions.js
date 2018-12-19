@@ -24,9 +24,7 @@ class TransactionList extends React.Component {
       <div>
         <div className="row">
           <div className="mt-5 block-position ml-5">
-            <h5>Payments Transactions List</h5>  
-
-
+            <h5>Payments Transfers List</h5>
             {this.props.paymentReducer?
              <div className="table-small">
         <table className="table able-hover table-dark table-striped "> 

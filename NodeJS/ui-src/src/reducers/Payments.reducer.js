@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
       case PaymentsConstants.PAYMENTS_REDEMPTIONDETAILS_SUCCESS:
       return {
         ...state,
-        RedemptionDetails: action.payload,
+        RedemptionDetails: action.payload.data,
         isFetching: false,
       };
     case PaymentsConstants.PAYMENTS_REDEMPTIONDETAILS_FAILURE:

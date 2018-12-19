@@ -11,7 +11,7 @@ const fetchInputPaymentsTransactionsList = () => (dispatch) => {
   });
 
   const TransactionDetails = {  
-    endpoint: '/payments/redeem',
+    endpoint: '/payments/credit',
     success: PaymentsConstants.PAYMENTS_INPUTPAYMENTDETAILS_SUCCESS,
     error: PaymentsConstants.PAYMENTS_INPUTPAYMENTDETAILS_FAILURE,
   };
@@ -40,7 +40,7 @@ const fetchTransferPayments = () => (dispatch) => {
 
 const fetchRedemptions = () => (dispatch) => {
   dispatch({
-    type: PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_FETCH,
+    type: PaymentsConstants.PAYMENTS_REDEMPTIONDETAILS_FETCH,
     payload: {
       isFetching: true,
     },
@@ -58,6 +58,5 @@ const fetchRedemptions = () => (dispatch) => {
 export default {
     fetchTransferPayments,
     fetchRedemptions,
-    fetchInputPaymentsTransactionsList,
-    fetchTransferPayments,  
+    fetchInputPaymentsTransactionsList  
 };

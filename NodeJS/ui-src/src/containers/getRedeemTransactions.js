@@ -91,7 +91,7 @@ class RedeemTransactionList extends React.Component {
   
   const mapStateToProps = (state, ownProps) => {
     let  {paymentReducer} = state;
-    paymentReducer = paymentReducer['RedemptionDetails']['data'];
+    paymentReducer = paymentReducer['RedemptionDetails']
     return {
       paymentReducer,
     };

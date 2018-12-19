@@ -5,7 +5,6 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log(action.type);
   switch (action.type) {
     case KYCConstants.KYC_CREATE_FETCH:
       return {
@@ -13,20 +12,19 @@ export default (state = initialState, action) => {
         isFetching: true,
       };
     case KYCConstants.KYC_CREATE_SUCCESS:
-      alert(('address',action.payload.address));
+      alert(('address', action.payload.address));
       return {
         ...state,
         KYCDetails: action.payload,
         isFetching: false,
       };
     case KYCConstants.KYC_CREATE_FAILURE:
-    console.log('Error occured : VM Exception');
-    alert('Customer is blacklisted!');
+      alert('Problem Creating User');
       return {
         ...state,
         err: action.payload,
-      }; 
-      case KYCConstants.KYC_GETDETAILS_SUCCESS:
+      };
+    case KYCConstants.KYC_GETDETAILS_SUCCESS:
       return {
         ...state,
         KYCDetails: action.payload,
@@ -36,7 +34,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         err: action.payload,
-      }; 
+      };
     default:
       return state;
   }

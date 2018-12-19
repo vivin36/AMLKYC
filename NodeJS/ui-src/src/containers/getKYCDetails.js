@@ -102,7 +102,6 @@ const mapStateToProps = (state) => {
     KYCReducer
   } = state;
   KYCReducer = KYCReducer? KYCReducer.KYCDetails.data:{};
-  console.log('state', KYCReducer);
   return {
     KYCReducer
   };

@@ -24,25 +24,37 @@ class TransactionList extends React.Component {
       <div>
         <div className="row">
           <div className="mt-5 block-position ml-5">
-            <h2>Transactions</h2>  
+            <h5>Payments Transactions List</h5>  
 
 
             {this.props.paymentReducer?
-             <div className="ml-5">
-        <table className="table table-bordered"> 
+             <div className="table-small">
+        <table className="table able-hover table-dark table-striped "> 
         <thead>
           <tr>
             <th>
                   ID
                 </th>               
                 <th>
-                amount
+                Amount
                 </th>
                 <th>
-                description
-                </th>      
+                Description
+                </th>     
                 <th>
-                status
+                Receiver Account Id
+                </th>  
+                <th>
+                Receiver Account Number
+                </th> 
+                <th>
+                Sender Account Id
+                </th>  
+                <th>
+                Sender Account Number
+                </th> 
+                <th>
+                Status
                 </th>            
                 <th>
                 Comments
@@ -54,9 +66,13 @@ class TransactionList extends React.Component {
                         {this.props.paymentReducer.map((row, i) =>
           <tr key={i}>
             <td>{row.id}</td>
-            <td>{row.amount}</td>
+            <td>{row.amount} {row.currency}</td>
             <td>{row.description}</td>
-            <td>{row.status}</td>
+            <td>{row.receiverAccountId}</td>
+            <td>{row.receiverAccountNumber}</td>
+            <td>{row.senderAccountId}</td>
+            <td>{row.senderAccountNumber}</td>
+            <td>{row.status =='S'?'Success':'Failure'}</td>
             <td>{row.comments}</td>
           </tr>
         )}

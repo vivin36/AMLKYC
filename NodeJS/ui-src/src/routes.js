@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router';
 import Home from './containers/Home';
 import CreateKYC from './containers/createKYC';
 import GetKYCDetails from './containers/getKYCDetails';
-import TransactionList from './containers/getTransactionsHistory';
+import TransactionList from './containers/getTransferTransactions';
 import NotFound from './components/404';
 import Layout from './hoc/Layout';
 

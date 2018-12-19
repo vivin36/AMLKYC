@@ -1,4 +1,4 @@
-package com.blockchain.adapter;
+package com.blockchain.api.config;
 
 import java.io.IOException;
 

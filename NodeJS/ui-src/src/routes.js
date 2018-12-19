@@ -19,7 +19,7 @@ const Routes = props => (
         <Route exact path="/fetchKYC" component={GetKYCDetails} />
         <Route exact path="/payments" component={TransactionList} /> 
         <Route exact path = "/redemptions" component = {RedeemTransactionList} />
-        <Route exact path="/redeempayments" component={InputPaymentsList} />
+        <Route exact path="/inputpayments" component={InputPaymentsList} />
         <Route exact path="/transferpayments" component={TransferPaymentsList} />
         <Route component={NotFound} />
       </Switch>

@@ -31,8 +31,8 @@ class Header extends React.Component {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/redeempayments">
-                Redeem payments List
+              <a className="nav-link" href="/inputpayments">
+                Input payments List
               </a>
             </li>
             <li className="nav-item">

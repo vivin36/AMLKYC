@@ -6,7 +6,7 @@ import PaymentsActions from '../actions/payment.action';
 import CreateKYCForm from '../components/forms/createKYCForm';
 
 
-class TransferPaymentsList extends React.Component {
+class RedeemPaymentsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { transaction: {} };
@@ -14,17 +14,15 @@ class TransferPaymentsList extends React.Component {
 
 
   componentDidMount() {
-    this.props.fetchTransferPayments();
+    this.props.fetchRedeemTransactionsList();
   }
-
-
-
+  
   render() {
     return (
       <div>
         <div className="row">
           <div className="mt-5 block-position ml-5">
-            <h5>Payments Transfers List</h5>
+            <h5>Payments Redeem List</h5>
             {this.props.paymentReducer?
              <div className="table-small">
         <table className="table able-hover table-dark table-striped "> 
@@ -85,13 +83,13 @@ class TransferPaymentsList extends React.Component {
   }
 }
 
-TransferPaymentsList.propTypes = {
+RedeemPaymentsList.propTypes = {
     fetchTransferPayments: PropTypes.func.isRequired,
   };
 
 const mapDispatchToProps = dispatch => ({
-    fetchTransferPayments: () => {
-        PaymentsActions.fetchTransferPayments()(dispatch);
+    fetchRedeemTransactionsList: () => {
+        PaymentsActions.fetchRedeemTransactionsList()(dispatch);
       },
   
 });
@@ -106,4 +104,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TransferPaymentsList);
+)(RedeemPaymentsList);

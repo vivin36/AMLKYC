@@ -2,10 +2,9 @@ import PaymentsConstants from '../constants/paymentConstant';
 import { getCall } from './fetch.actions';
 
 
-
-const fetchTransferPayments = () => (dispatch) => {
+const fetchRedeemTransactionsList = () => (dispatch) => {
   dispatch({
-    type: PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_FETCH,
+    type: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FETCH,
     payload: {
       isFetching: true,
     },
@@ -13,8 +12,27 @@ const fetchTransferPayments = () => (dispatch) => {
 
   const TransactionDetails = {  
     endpoint: '/payments/transfer',
-    success: PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_SUCCESS,
-    error: PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_FAILURE,
+    success: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_SUCCESS,
+    error: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FAILURE,
+  };
+
+  getCall(TransactionDetails)(dispatch);
+};
+
+
+
+const fetchTransferPayments = () => (dispatch) => {
+  dispatch({
+    type: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FETCH,
+    payload: {
+      isFetching: true,
+    },
+  });
+
+  const TransactionDetails = {  
+    endpoint: '/payments/transfer',
+    success: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_SUCCESS,
+    error: PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FAILURE,
   };
 
   getCall(TransactionDetails)(dispatch);

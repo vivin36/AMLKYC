@@ -6,7 +6,7 @@ import PaymentsActions from '../actions/payment.action';
 import CreateKYCForm from '../components/forms/createKYCForm';
 
 
-class RedeemPaymentsList extends React.Component {
+class InputPaymentsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { transaction: {} };
@@ -14,7 +14,7 @@ class RedeemPaymentsList extends React.Component {
 
 
   componentDidMount() {
-    this.props.fetchRedeemTransactionsList();
+    this.props.fetchInputPaymentsTransactionsList();
   }
   
   render() {
@@ -22,7 +22,7 @@ class RedeemPaymentsList extends React.Component {
       <div>
         <div className="row">
           <div className="mt-5 block-position ml-5">
-            <h5>Payments Redeem List</h5>
+            <h5>Input Payments List</h5>
             {this.props.paymentReducer?
              <div className="table-small">
         <table className="table able-hover table-dark table-striped "> 
@@ -38,17 +38,12 @@ class RedeemPaymentsList extends React.Component {
                 Description
                 </th>     
                 <th>
-                Receiver Account Id
+                Account Number
                 </th>  
                 <th>
-                Receiver Account Number
-                </th> 
-                <th>
-                Sender Account Id
+                 Account Id
                 </th>  
-                <th>
-                Sender Account Number
-                </th> 
+            
                 <th>
                 Status
                 </th>            
@@ -64,10 +59,8 @@ class RedeemPaymentsList extends React.Component {
             <td>{row.id}</td>
             <td>{row.amount} {row.currency}</td>
             <td>{row.description}</td>
-            <td>{row.receiverAccountId}</td>
-            <td>{row.receiverAccountNumber}</td>
-            <td>{row.senderAccountId}</td>
-            <td>{row.senderAccountNumber}</td>
+            <td>{row.accountNumber}</td>
+            <td>{row.accountId}</td>
             <td>{row.status =='S'?'Success':'Failure'}</td>
             <td>{row.comments}</td>
           </tr>
@@ -83,20 +76,20 @@ class RedeemPaymentsList extends React.Component {
   }
 }
 
-RedeemPaymentsList.propTypes = {
-    fetchTransferPayments: PropTypes.func.isRequired,
+InputPaymentsList.propTypes = {
+  fetchInputPaymentsTransactionsList: PropTypes.func.isRequired,
   };
 
 const mapDispatchToProps = dispatch => ({
-    fetchRedeemTransactionsList: () => {
-        PaymentsActions.fetchRedeemTransactionsList()(dispatch);
+  fetchInputPaymentsTransactionsList: () => {
+        PaymentsActions.fetchInputPaymentsTransactionsList()(dispatch);
       },
   
 });
 
 const mapStateToProps = (state, ownProps) => {
   let  {paymentReducer} = state;
-  paymentReducer = paymentReducer['PaymentsDetails']['data'];
+  paymentReducer = paymentReducer['PaymentsTransferDetails'];
   return {
     paymentReducer,
   };
@@ -104,4 +97,4 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RedeemPaymentsList);
+)(InputPaymentsList);

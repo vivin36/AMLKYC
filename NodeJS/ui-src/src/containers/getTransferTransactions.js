@@ -98,7 +98,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, ownProps) => {
   let  {paymentReducer} = state;
-  paymentReducer = paymentReducer['PaymentsDetails']['data'];
+  paymentReducer = paymentReducer ? paymentReducer['PaymentsTransferDetails']:{};
   return {
     paymentReducer,
   };

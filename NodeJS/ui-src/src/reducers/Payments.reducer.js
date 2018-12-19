@@ -6,18 +6,34 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_FETCH:
+    case PaymentsConstants.PAYMENTS_INPUTPAYMENTDETAILS_FETCH:
+    return {
+      ...state,
+      isFetching: true,
+    };
+    case PaymentsConstants.PAYMENTS_INPUTPAYMENTDETAILS_SUCCESS:
+    return {
+      ...state,
+      InputPaymentsDetails: action.payload.data,
+      isFetching: false,
+    };
+  case PaymentsConstants.PAYMENTS_INPUTPAYMENTDETAILS_FAILURE:
+    return {
+      ...state,
+      err: action.payload,
+    };
+    case PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FETCH:
       return {
         ...state,
         isFetching: true,
       };
-      case PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_SUCCESS:
+      case PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_SUCCESS:
       return {
         ...state,
-        PaymentsDetails: action.payload,
+        PaymentsTransferDetails: action.payload.data,
         isFetching: false,
       };
-    case PaymentsConstants.PAYMENTS_TRANSACTIONDETAILS_FAILURE:
+    case PaymentsConstants.PAYMENTS_TRANSFERTRANSACTIONDETAILS_FAILURE:
       return {
         ...state,
         err: action.payload,

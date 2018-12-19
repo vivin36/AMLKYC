@@ -30,6 +30,11 @@ class Header extends React.Component {
                 Get KYC details By ID
               </a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/payments">
+                Payments
+              </a>
+            </li>
           </ul>
         </div>
       </nav>

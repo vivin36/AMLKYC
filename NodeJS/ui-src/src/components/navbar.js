@@ -61,6 +61,9 @@ class NavBar extends React.Component {
             <NavItem eventKey="charts/barchart">
               <NavText>Get KYC details</NavText>
             </NavItem>
+            <NavItem >
+              <NavText>Payments</NavText>
+            </NavItem>
           </NavItem>
         </SideNav.Nav>
       </SideNav>
